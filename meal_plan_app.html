@@ -991,6 +991,35 @@ function matchFoodItem(itemText){
   return bestScore>2?best:null;
 }
 
+function calcFoodMacros(food,qty,unitOverride){
+  if(!food||qty<=0)return{grams:0,cal:0,p:0,c:0,f:0,fi:0};
+  if(food.isPerPiece){
+    // Some piece foods store nutrition per 100g + defaultG per piece (e.g., apple/guava).
+    if(food.defaultG){
+      const grams=food.defaultG*qty;
+      return{
+        grams,
+        cal:food.cal*grams/100,
+        p:food.p*grams/100,
+        c:food.c*grams/100,
+        f:food.f*grams/100,
+        fi:food.fi*grams/100
+      };
+    }
+    return{grams:qty,cal:food.cal*qty,p:food.p*qty,c:food.c*qty,f:food.f*qty,fi:food.fi*qty};
+  }
+  const unitG=(unitOverride&&unitOverride.g)||food.defaultG||100;
+  const grams=unitG*qty;
+  return{
+    grams,
+    cal:food.cal*grams/100,
+    p:food.p*grams/100,
+    c:food.c*grams/100,
+    f:food.f*grams/100,
+    fi:food.fi*grams/100
+  };
+}
+
 function updateMlPreview(){
   const rows=document.querySelectorAll('[id^="mlrow-"]');
   let totCal=0,totP=0,totC=0,totF=0,totFi=0;
@@ -999,14 +1028,8 @@ function updateMlPreview(){
     const qty=parseFloat(row.querySelector('input').value)||0;
     if(idx>=0&&qty>0){
       const food=FOOD_DB[idx];
-      let cal,p,c,f,fi;
-      if(food.isPerPiece){
-        cal=food.cal*qty;p=food.p*qty;c=food.c*qty;f=food.f*qty;fi=food.fi*qty;
-      } else {
-        const g=(food.defaultG||150)*qty;
-        cal=food.cal*g/100;p=food.p*g/100;c=food.c*g/100;f=food.f*g/100;fi=food.fi*g/100;
-      }
-      totCal+=cal;totP+=p;totC+=c;totF+=f;totFi+=fi;
+      const macro=calcFoodMacros(food,qty,{g:food.defaultG||150});
+      totCal+=macro.cal;totP+=macro.p;totC+=macro.c;totF+=macro.f;totFi+=macro.fi;
     }
   });
   if(totCal>0){
@@ -1036,12 +1059,8 @@ function confirmMealLog(){
     let cal,p,c,f,fi,grams;
     if(idx>=0){
       const food=FOOD_DB[idx];
-      if(food.isPerPiece){
-        cal=food.cal*qty;p=food.p*qty;c=food.c*qty;f=food.f*qty;fi=food.fi*qty;grams=qty;
-      } else {
-        grams=(food.defaultG||150)*qty;
-        cal=food.cal*grams/100;p=food.p*grams/100;c=food.c*grams/100;f=food.f*grams/100;fi=food.fi*grams/100;
-      }
+      const macro=calcFoodMacros(food,qty,{g:food.defaultG||150});
+      grams=macro.grams;cal=macro.cal;p=macro.p;c=macro.c;f=macro.f;fi=macro.fi;
     } else {
       // Unmatched — use slot estimate divided by items
       const mac=SLOT_MACRO_EST[pendingMealSlot];
@@ -1111,12 +1130,11 @@ function onFoodInput(){
   const matches=FOOD_DB.filter(f=>f.name.toLowerCase().includes(q)||f.kw.some(k=>k.includes(q))).slice(0,7);
   if(!matches.length){sugg.classList.remove('open');return;}
   sugg.innerHTML=matches.map(f=>{
-    let kcalPreview;
-    if(f.isPerPiece){
-      kcalPreview=`${Math.round(f.cal*(f.defQ||1))} kcal / ${f.defQ||1} pc`;
-    } else {
-      kcalPreview=`${Math.round(f.cal*(f.defaultG||100)/100)} kcal / ${f.defaultUnit||'serving'}`;
-    }
+    const previewQty=f.defQ||1;
+    const preview=calcFoodMacros(f,f.isPerPiece?previewQty:1,{g:f.defaultG||100});
+    const kcalPreview=f.isPerPiece
+      ? `${Math.round(preview.cal)} kcal / ${previewQty} pc`
+      : `${Math.round(preview.cal)} kcal / ${f.defaultUnit||'serving'}`;
     return`<div class="food-sugg-item" onclick="openQtyModal(${FOOD_DB.indexOf(f)})">
       <div>
         <div class="food-sugg-name">${f.name}</div>
@@ -1162,13 +1180,8 @@ function selectUnit(id,btn){
 function updateQtyPreview(){
   if(!pendingFood||!selectedUnit)return;
   const qty=parseFloat(document.getElementById('qtyInput').value)||1;
-  let cal,p,c,f,fi;
-  if(pendingFood.isPerPiece){
-    cal=pendingFood.cal*qty;p=pendingFood.p*qty;c=pendingFood.c*qty;f=pendingFood.f*qty;fi=pendingFood.fi*qty;
-  } else {
-    const grams=selectedUnit.g*qty;
-    cal=pendingFood.cal*grams/100;p=pendingFood.p*grams/100;c=pendingFood.c*grams/100;f=pendingFood.f*grams/100;fi=pendingFood.fi*grams/100;
-  }
+  const macro=calcFoodMacros(pendingFood,qty,selectedUnit);
+  const cal=macro.cal,p=macro.p,c=macro.c,f=macro.f,fi=macro.fi;
   document.getElementById('qtyPreview').innerHTML=`
     <div class="qty-prev-item"><div class="qty-prev-val">${Math.round(cal)}</div><div class="qty-prev-unit">kcal</div></div>
     <div class="qty-prev-item"><div class="qty-prev-val">${Math.round(p*10)/10}g</div><div class="qty-prev-unit">Protein</div></div>
@@ -1180,13 +1193,8 @@ function updateQtyPreview(){
 function confirmQty(){
   if(!pendingFood||!selectedUnit)return;
   const qty=parseFloat(document.getElementById('qtyInput').value)||1;
-  let grams,cal,p,c,f,fi;
-  if(pendingFood.isPerPiece){
-    grams=qty;cal=pendingFood.cal*qty;p=pendingFood.p*qty;c=pendingFood.c*qty;f=pendingFood.f*qty;fi=pendingFood.fi*qty;
-  } else {
-    grams=selectedUnit.g*qty;
-    cal=pendingFood.cal*grams/100;p=pendingFood.p*grams/100;c=pendingFood.c*grams/100;f=pendingFood.f*grams/100;fi=pendingFood.fi*grams/100;
-  }
+  const macro=calcFoodMacros(pendingFood,qty,selectedUnit);
+  const grams=macro.grams,cal=macro.cal,p=macro.p,c=macro.c,f=macro.f,fi=macro.fi;
   const entry={name:pendingFood.name,qty,unit:selectedUnit.label,grams:Math.round(grams),
     cal:Math.round(cal),p:Math.round(p*10)/10,c:Math.round(c*10)/10,f:Math.round(f*10)/10,fi:Math.round(fi*10)/10,
     id:Date.now()};
