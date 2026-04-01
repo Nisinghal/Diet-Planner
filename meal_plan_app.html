@@ -4,272 +4,420 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Nourish — Your Wellness Meal Plan</title>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:#f5f0ea;--surface:#fff;--surface2:#ede8e1;--surface3:#f9f6f2;
-  --accent:#2d2010;--accent2:#a0673a;--accent3:#c8895a;
-  --green:#2e6b3e;--green-bg:#e8f4ec;--red:#b84032;--red-bg:#fdf0ee;
-  --gold:#b8862a;--gold-bg:#fdf4e3;--water:#2b6cb0;--water-bg:#ebf4ff;
-  --text:#1a1208;--text2:#4a3c28;--text3:#8a7a64;--border:#ddd6cc;
-  --radius:14px;--shadow:0 1px 12px rgba(0,0,0,0.07);--font:'Sora',sans-serif;
+  --bg:#f4f1eb;--surface:#fdfcf9;--surface2:#ede9e0;--surface3:#f8f5ef;
+  --accent:#1c2e1a;--accent2:#3a6b35;--accent3:#5d9e56;
+  --warm:#c4783a;--warm-bg:#fdf4eb;--warm-lt:#e8c49a;
+  --green:#2e6b3e;--green-bg:#e8f4ec;--green-lt:#b8dfc0;
+  --red:#b84032;--red-bg:#fdf0ee;
+  --gold:#b8862a;--gold-bg:#fdf4e3;
+  --water:#2b6cb0;--water-bg:#ebf4ff;
+  --text:#1a1a14;--text2:#3d3d2e;--text3:#7a7a60;--border:#e0dbd0;
+  --radius:16px;--radius-sm:10px;
+  --shadow:0 2px 16px rgba(28,46,26,0.08);
+  --shadow-sm:0 1px 6px rgba(28,46,26,0.06);
+  --font-serif:'DM Serif Display',Georgia,serif;
+  --font:'DM Sans',system-ui,sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;max-width:480px;margin:0 auto;padding-bottom:90px;font-size:14px;}
-h1,h2,h3,h4{font-family:var(--font);font-weight:700;}
-.header{background:var(--surface);padding:16px 18px 0;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200;box-shadow:0 2px 16px rgba(0,0,0,0.06);}
-.header-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
-.app-name{font-size:1.25rem;font-weight:700;color:var(--accent);letter-spacing:-0.3px;}
-.app-name span{color:var(--accent2);}
-.date-chip{background:var(--surface2);border-radius:20px;padding:5px 12px;font-size:0.72rem;color:var(--text2);font-weight:600;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;max-width:480px;margin:0 auto;padding-bottom:96px;font-size:14px;-webkit-font-smoothing:antialiased;}
+
+/* === HEADER === */
+.header{background:var(--surface);padding:14px 18px 0;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200;box-shadow:0 2px 20px rgba(28,46,26,0.08);}
+.header-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.app-name{font-family:var(--font-serif);font-size:1.4rem;color:var(--accent);letter-spacing:-0.5px;line-height:1;}
+.app-name em{color:var(--accent2);font-style:italic;}
+.date-chip{background:var(--surface2);border-radius:20px;padding:5px 12px;font-size:0.7rem;color:var(--text2);font-weight:600;letter-spacing:0.2px;}
 .nav-tabs{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;}
 .nav-tabs::-webkit-scrollbar{display:none;}
-.tab-btn{flex-shrink:0;padding:10px 14px;background:none;border:none;border-bottom:2.5px solid transparent;color:var(--text3);font-family:var(--font);font-size:0.8rem;font-weight:600;cursor:pointer;transition:all .18s;letter-spacing:0.1px;}
+.tab-btn{flex-shrink:0;padding:10px 14px;background:none;border:none;border-bottom:2.5px solid transparent;color:var(--text3);font-family:var(--font);font-size:0.75rem;font-weight:600;cursor:pointer;transition:all .18s;letter-spacing:0.2px;text-transform:uppercase;}
 .tab-btn.active{color:var(--accent2);border-bottom-color:var(--accent2);}
-.page{display:none;padding:14px 14px 10px;}
+
+/* === PAGES === */
+.page{display:none;padding:16px 14px 10px;animation:fadeIn .2s ease;}
 .page.active{display:block;}
-.card{background:var(--surface);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;box-shadow:var(--shadow);border:1px solid var(--border);}
-.card-title{font-size:0.65rem;text-transform:uppercase;letter-spacing:1.2px;color:var(--text3);font-weight:700;margin-bottom:12px;}
-.section-heading{font-size:1rem;color:var(--accent);margin-bottom:12px;font-weight:700;}
-.day-hero{background:var(--accent);color:white;border-radius:var(--radius);padding:18px 16px;margin-bottom:10px;position:relative;overflow:hidden;}
-.day-hero::after{content:'';position:absolute;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,0.04);right:-60px;bottom:-60px;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+/* === CARDS === */
+.card{background:var(--surface);border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:var(--shadow-sm);border:1px solid var(--border);}
+.card-title{font-size:0.6rem;text-transform:uppercase;letter-spacing:1.4px;color:var(--text3);font-weight:700;margin-bottom:14px;}
+.section-heading{font-family:var(--font-serif);font-size:1.25rem;color:var(--accent);margin-bottom:14px;letter-spacing:-0.3px;}
+
+/* === DAY HERO === */
+.day-hero{background:var(--accent);color:white;border-radius:var(--radius);padding:20px 18px 16px;margin-bottom:12px;position:relative;overflow:hidden;}
+.day-hero::before{content:'';position:absolute;inset:0;pointer-events:none;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");}
 .day-nav{display:flex;justify-content:space-between;align-items:center;}
-.day-nav-btn{background:rgba(255,255,255,0.12);border:none;color:white;width:34px;height:34px;border-radius:50%;font-size:1rem;cursor:pointer;transition:background .2s;display:flex;align-items:center;justify-content:center;}
-.day-nav-btn:hover{background:rgba(255,255,255,0.25);}
-.day-center{text-align:center;}
-.day-label{font-size:0.68rem;opacity:0.65;margin-bottom:3px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;}
-.day-title{font-size:1.3rem;font-weight:700;letter-spacing:-0.3px;}
-.day-progress-bar{margin-top:12px;height:4px;background:rgba(255,255,255,0.15);border-radius:2px;overflow:hidden;}
-.day-progress-fill{height:100%;background:var(--accent3);border-radius:2px;transition:width .4s;}
-.day-progress-txt{font-size:0.65rem;opacity:0.7;margin-top:5px;text-align:right;}
-.slots-toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.day-nav-btn{background:rgba(255,255,255,0.1);border:1.5px solid rgba(255,255,255,0.2);color:white;width:36px;height:36px;border-radius:50%;font-size:1.1rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;line-height:1;}
+.day-nav-btn:active{background:rgba(255,255,255,0.25);transform:scale(0.95);}
+.day-center{text-align:center;flex:1;padding:0 12px;}
+.day-label{font-size:0.62rem;opacity:0.55;margin-bottom:4px;font-weight:600;letter-spacing:1px;text-transform:uppercase;}
+.day-title{font-family:var(--font-serif);font-size:1.5rem;letter-spacing:-0.3px;line-height:1.2;}
+.day-subtitle{font-size:0.68rem;opacity:0.6;margin-top:2px;}
+.day-progress-bar{margin-top:14px;height:3px;background:rgba(255,255,255,0.12);border-radius:2px;overflow:hidden;}
+.day-progress-fill{height:100%;background:var(--accent3);border-radius:2px;transition:width .5s cubic-bezier(.4,0,.2,1);}
+.day-progress-txt{font-size:0.6rem;opacity:0.6;margin-top:5px;display:flex;justify-content:space-between;}
+
+/* === SLOTS TOOLBAR === */
+.slots-toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px;}
 .toggle-row-label{font-size:0.78rem;color:var(--text2);font-weight:500;}
-.toggle{position:relative;width:40px;height:22px;background:var(--border);border-radius:11px;border:none;cursor:pointer;transition:background .2s;}
+.toggle{position:relative;width:42px;height:24px;background:var(--border);border-radius:12px;border:none;cursor:pointer;transition:background .22s;flex-shrink:0;}
 .toggle.on{background:var(--green);}
-.toggle::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:white;transition:left .2s;box-shadow:0 1px 4px rgba(0,0,0,0.2);}
+.toggle::after{content:'';position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:white;transition:left .22s;box-shadow:0 1px 4px rgba(0,0,0,0.25);}
 .toggle.on::after{left:21px;}
-.meal-slot{border-left:3px solid var(--border);padding:10px 12px;margin-bottom:8px;border-radius:0 var(--radius) var(--radius) 0;background:var(--surface3);transition:all .2s;}
-.meal-slot.completed{border-left-color:var(--green);background:var(--green-bg);}
-.meal-slot.dismissed{opacity:0.38;filter:grayscale(0.4);border-left-color:var(--red);}
-.slot-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;}
-.slot-meta{display:flex;align-items:center;gap:6px;}
-.slot-icon{font-size:0.95rem;}
-.slot-name{font-size:0.72rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:0.4px;}
-.slot-time-chip{background:var(--surface2);border-radius:10px;padding:1px 7px;font-size:0.62rem;color:var(--text3);font-weight:600;}
-.slot-actions{display:flex;gap:5px;align-items:center;}
-.action-btn{width:26px;height:26px;border-radius:50%;border:none;cursor:pointer;font-size:0.75rem;display:flex;align-items:center;justify-content:center;transition:all .15s;font-family:var(--font);}
-.action-btn:active{transform:scale(0.9);}
+
+/* === MEAL SLOTS === */
+.meal-slot{background:var(--surface);border-radius:var(--radius);margin-bottom:10px;box-shadow:var(--shadow-sm);border:1px solid var(--border);overflow:hidden;transition:all .25s;}
+.meal-slot.completed{border-color:var(--green-lt);background:var(--green-bg);}
+.meal-slot.dismissed{opacity:0.4;filter:grayscale(0.5);}
+.slot-top{display:flex;justify-content:space-between;align-items:center;padding:12px 14px 10px;}
+.slot-meta{display:flex;align-items:center;gap:7px;}
+.slot-icon-wrap{width:30px;height:30px;border-radius:8px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0;}
+.meal-slot.completed .slot-icon-wrap{background:var(--green-lt);}
+.slot-info{}
+.slot-name{font-size:0.72rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;line-height:1;}
+.slot-time-chip{font-size:0.6rem;color:var(--text3);font-weight:500;margin-top:2px;}
+.slot-actions{display:flex;gap:6px;align-items:center;}
+.action-btn{height:28px;border-radius:20px;border:none;cursor:pointer;font-size:0.7rem;display:flex;align-items:center;justify-content:center;gap:4px;transition:all .15s;font-family:var(--font);font-weight:600;padding:0 10px;}
+.action-btn:active{transform:scale(0.93);}
 .btn-check-off{background:var(--surface2);color:var(--text3);border:1.5px solid var(--border);}
-.btn-check-on{background:var(--green);color:white;}
-.btn-dismiss-off{background:var(--surface2);color:var(--text3);border:1.5px solid var(--border);}
-.btn-dismiss-on{background:var(--red);color:white;}
-.btn-swap{background:var(--gold-bg);color:var(--gold);border:1.5px solid #e8d4a0;font-size:0.8rem;}
-.slot-items{font-size:0.82rem;color:var(--text2);line-height:1.6;}
-.slot-item{padding:1px 0;display:flex;align-items:flex-start;gap:5px;}
-.slot-item-dot{color:var(--accent3);flex-shrink:0;margin-top:2px;font-size:0.7rem;}
+.btn-check-on{background:var(--green);color:white;box-shadow:0 2px 8px rgba(46,107,62,0.3);}
+.btn-dismiss-off{background:var(--surface2);color:var(--text3);border:1.5px solid var(--border);width:28px;padding:0;}
+.btn-dismiss-on{background:var(--red);color:white;width:28px;padding:0;}
+.btn-swap{background:var(--warm-bg);color:var(--warm);border:1.5px solid var(--warm-lt);width:28px;padding:0;font-size:0.85rem;}
+.slot-body{padding:0 14px 12px;}
+.slot-items{font-size:0.82rem;color:var(--text2);line-height:1.65;}
+.slot-item{padding:1.5px 0;display:flex;align-items:flex-start;gap:6px;}
+.slot-item-dot{color:var(--accent3);flex-shrink:0;margin-top:3px;font-size:0.55rem;}
 .slot-item-text{flex:1;}
 .slot-item.alt .slot-item-dot{color:var(--text3);}
 .slot-item.alt .slot-item-text{color:var(--text3);font-style:italic;font-size:0.77rem;}
-.macros-pill{margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;}
-.mpill{background:var(--surface2);border-radius:10px;padding:2px 8px;font-size:0.62rem;color:var(--text3);font-weight:600;}
-.dismissed-note{font-size:0.68rem;color:var(--red);font-weight:600;margin-top:5px;}
-.meal-slot:not(.dismissed) .dismissed-note{display:none;}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:500;display:none;align-items:flex-end;justify-content:center;}
+.macros-pill{margin-top:10px;display:flex;gap:5px;flex-wrap:wrap;}
+.mpill{background:var(--surface2);border-radius:8px;padding:3px 8px;font-size:0.6rem;color:var(--text3);font-weight:600;}
+.meal-slot.completed .mpill{background:rgba(46,107,62,0.1);color:var(--green);}
+.dismissed-note{font-size:0.65rem;color:var(--red);font-weight:600;margin-top:6px;display:none;}
+.meal-slot.dismissed .dismissed-note{display:block;}
+
+/* === MODAL === */
+.modal-overlay{position:fixed;inset:0;background:rgba(20,26,20,0.5);z-index:500;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(2px);}
 .modal-overlay.open{display:flex;}
-.modal-sheet{background:var(--surface);border-radius:20px 20px 0 0;padding:20px;width:100%;max-width:480px;max-height:80vh;overflow-y:auto;animation:slideUp .25s ease;}
+.modal-sheet{background:var(--surface);border-radius:24px 24px 0 0;padding:20px;width:100%;max-width:480px;max-height:85vh;overflow-y:auto;animation:slideUp .28s cubic-bezier(.4,0,.2,1);}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.modal-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 16px;}
-.modal-title{font-size:0.95rem;font-weight:700;color:var(--accent);margin-bottom:4px;}
-.modal-subtitle{font-size:0.75rem;color:var(--text3);margin-bottom:14px;}
-.swap-card{border:1.5px solid var(--border);border-radius:12px;padding:12px;margin-bottom:8px;cursor:pointer;transition:all .15s;}
-.swap-card:hover,.swap-card:active{border-color:var(--accent2);background:var(--surface3);}
-.swap-card-name{font-size:0.85rem;font-weight:700;color:var(--text);margin-bottom:3px;}
-.swap-card-why{font-size:0.72rem;color:var(--text3);line-height:1.4;}
-.swap-card-pills{display:flex;gap:4px;margin-top:6px;flex-wrap:wrap;}
-.swap-pill{background:var(--gold-bg);color:var(--gold);border-radius:8px;padding:1px 7px;font-size:0.62rem;font-weight:700;}
-.modal-close{width:100%;padding:11px;border-radius:10px;background:var(--surface2);color:var(--text2);border:none;font-family:var(--font);font-size:0.85rem;font-weight:600;cursor:pointer;margin-top:8px;}
-.fl-search-row{display:flex;gap:8px;margin-bottom:10px;}
-.fl-search-row input{flex:1;padding:10px 12px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface3);font-family:var(--font);font-size:0.85rem;color:var(--text);outline:none;}
-.fl-search-row input:focus{border-color:var(--accent2);}
-.fl-search-row button{padding:10px 16px;border-radius:10px;background:var(--accent2);color:white;border:none;font-family:var(--font);font-size:0.82rem;font-weight:600;cursor:pointer;}
-.food-suggestions{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:10px;display:none;}
-.food-suggestions.open{display:block;}
-.food-sugg-item{padding:10px 12px;cursor:pointer;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;transition:background .15s;}
-.food-sugg-item:last-child{border-bottom:none;}
-.food-sugg-item:hover{background:var(--surface3);}
-.food-sugg-name{font-size:0.83rem;font-weight:600;color:var(--text);}
-.food-sugg-meta{font-size:0.7rem;color:var(--text3);}
-.food-sugg-cal{font-size:0.78rem;font-weight:700;color:var(--accent2);}
-.qty-modal{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:600;display:none;align-items:flex-end;justify-content:center;}
+.modal-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 18px;}
+.modal-title{font-family:var(--font-serif);font-size:1.1rem;color:var(--accent);margin-bottom:4px;}
+.modal-subtitle{font-size:0.72rem;color:var(--text3);margin-bottom:16px;}
+.swap-card{border:1.5px solid var(--border);border-radius:14px;padding:13px;margin-bottom:8px;cursor:pointer;transition:all .15s;}
+.swap-card:active{border-color:var(--accent2);background:var(--surface3);transform:scale(0.99);}
+.swap-card-name{font-size:0.88rem;font-weight:700;color:var(--text);margin-bottom:4px;}
+.swap-card-why{font-size:0.72rem;color:var(--text3);line-height:1.45;}
+.swap-card-pills{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap;}
+.swap-pill{background:var(--warm-bg);color:var(--warm);border-radius:8px;padding:2px 8px;font-size:0.6rem;font-weight:700;}
+.modal-close{width:100%;padding:13px;border-radius:12px;background:var(--surface2);color:var(--text2);border:none;font-family:var(--font);font-size:0.85rem;font-weight:600;cursor:pointer;margin-top:8px;}
+
+/* === MEAL LOG MODAL (from tick) === */
+.meal-log-sheet{background:var(--surface);border-radius:24px 24px 0 0;padding:20px;width:100%;max-width:480px;max-height:88vh;overflow-y:auto;animation:slideUp .28s cubic-bezier(.4,0,.2,1);}
+.ml-slot-banner{background:var(--accent);border-radius:12px;padding:12px 14px;margin-bottom:16px;color:white;}
+.ml-slot-name{font-size:0.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;opacity:0.7;margin-bottom:3px;}
+.ml-slot-title{font-family:var(--font-serif);font-size:1.05rem;}
+.ml-items-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:1px;color:var(--text3);font-weight:700;margin-bottom:8px;}
+.ml-item-row{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--surface3);border-radius:10px;margin-bottom:6px;}
+.ml-item-name{font-size:0.82rem;font-weight:600;color:var(--text);flex:1;}
+.ml-item-qty{width:46px;padding:5px 7px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font);font-size:0.82rem;color:var(--text);text-align:center;outline:none;}
+.ml-item-qty:focus{border-color:var(--accent2);}
+.ml-item-unit{font-size:0.7rem;color:var(--text3);white-space:nowrap;}
+.ml-preview{background:var(--accent);border-radius:12px;padding:12px 14px;margin:14px 0;color:white;display:none;}
+.ml-preview.show{display:block;}
+.ml-preview-title{font-size:0.6rem;text-transform:uppercase;letter-spacing:1px;opacity:0.65;margin-bottom:8px;}
+.ml-preview-macros{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
+.ml-preview-m{text-align:center;}
+.ml-preview-v{font-size:0.9rem;font-weight:700;}
+.ml-preview-l{font-size:0.55rem;opacity:0.65;text-transform:uppercase;margin-top:1px;}
+.ml-confirm{width:100%;padding:13px;border-radius:12px;background:var(--green);color:white;border:none;font-family:var(--font);font-size:0.88rem;font-weight:700;cursor:pointer;margin-top:4px;box-shadow:0 2px 10px rgba(46,107,62,0.3);}
+
+/* === FOOD LOG QTY MODAL === */
+.qty-modal{position:fixed;inset:0;background:rgba(20,26,20,0.5);z-index:600;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(2px);}
 .qty-modal.open{display:flex;}
-.qty-sheet{background:var(--surface);border-radius:20px 20px 0 0;padding:20px;width:100%;max-width:480px;}
-.qty-title{font-size:0.95rem;font-weight:700;color:var(--accent);margin-bottom:12px;}
-.unit-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
-.unit-btn{padding:10px 8px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface3);cursor:pointer;font-family:var(--font);font-size:0.78rem;font-weight:600;color:var(--text2);text-align:left;transition:all .15s;}
-.unit-btn.selected{border-color:var(--accent2);background:#fff5ee;color:var(--accent2);}
+.qty-sheet{background:var(--surface);border-radius:24px 24px 0 0;padding:20px;width:100%;max-width:480px;animation:slideUp .28s cubic-bezier(.4,0,.2,1);}
+.qty-title{font-family:var(--font-serif);font-size:1.05rem;color:var(--accent);margin-bottom:14px;}
+.unit-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:14px;}
+.unit-btn{padding:9px 6px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface3);cursor:pointer;font-family:var(--font);font-size:0.75rem;font-weight:600;color:var(--text2);text-align:center;transition:all .15s;}
+.unit-btn.selected{border-color:var(--accent2);background:#eef6ec;color:var(--accent2);}
 .qty-row{display:flex;gap:10px;align-items:center;margin-bottom:14px;}
-.qty-row label{font-size:0.75rem;color:var(--text3);font-weight:600;width:70px;}
-.qty-row input{flex:1;padding:8px 12px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface3);font-family:var(--font);font-size:0.9rem;color:var(--text);outline:none;}
+.qty-row label{font-size:0.72rem;color:var(--text3);font-weight:600;width:70px;}
+.qty-row input{flex:1;padding:9px 12px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface3);font-family:var(--font);font-size:0.9rem;color:var(--text);outline:none;}
 .qty-row input:focus{border-color:var(--accent2);}
-.qty-preview{background:var(--surface3);border-radius:10px;padding:10px 12px;margin-bottom:14px;display:flex;gap:10px;flex-wrap:wrap;}
+.qty-preview{background:var(--surface3);border-radius:12px;padding:12px;margin-bottom:14px;display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
 .qty-prev-item{text-align:center;}
-.qty-prev-val{font-size:1rem;font-weight:700;color:var(--accent2);}
-.qty-prev-unit{font-size:0.62rem;color:var(--text3);font-weight:600;}
-.qty-confirm{width:100%;padding:12px;border-radius:10px;background:var(--accent2);color:white;border:none;font-family:var(--font);font-size:0.88rem;font-weight:700;cursor:pointer;}
+.qty-prev-val{font-size:0.95rem;font-weight:700;color:var(--accent2);}
+.qty-prev-unit{font-size:0.58rem;color:var(--text3);font-weight:600;text-transform:uppercase;margin-top:1px;}
+.qty-confirm{width:100%;padding:13px;border-radius:12px;background:var(--accent2);color:white;border:none;font-family:var(--font);font-size:0.88rem;font-weight:700;cursor:pointer;box-shadow:0 2px 10px rgba(58,107,53,0.3);}
+
+/* === FOOD SEARCH === */
+.fl-search-row{display:flex;gap:8px;margin-bottom:10px;}
+.fl-search-row input{flex:1;padding:11px 14px;border-radius:12px;border:1.5px solid var(--border);background:var(--surface3);font-family:var(--font);font-size:0.85rem;color:var(--text);outline:none;}
+.fl-search-row input:focus{border-color:var(--accent2);}
+.fl-search-row button{padding:11px 16px;border-radius:12px;background:var(--accent2);color:white;border:none;font-family:var(--font);font-size:0.82rem;font-weight:600;cursor:pointer;}
+.food-suggestions{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:10px;display:none;box-shadow:var(--shadow);}
+.food-suggestions.open{display:block;}
+.food-sugg-item{padding:11px 14px;cursor:pointer;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;transition:background .15s;}
+.food-sugg-item:last-child{border-bottom:none;}
+.food-sugg-item:active{background:var(--surface3);}
+.food-sugg-name{font-size:0.84rem;font-weight:600;color:var(--text);}
+.food-sugg-meta{font-size:0.68rem;color:var(--text3);margin-top:1px;}
+.food-sugg-cal{font-size:0.8rem;font-weight:700;color:var(--accent2);}
+
+/* === LOGGED ITEMS === */
 .logged-items{margin-top:10px;}
-.logged-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);}
+.logged-item{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border);}
 .logged-item:last-child{border-bottom:none;}
-.li-name{font-size:0.82rem;font-weight:600;color:var(--text);}
-.li-qty{font-size:0.7rem;color:var(--text3);}
-.li-right{display:flex;align-items:center;gap:8px;}
-.li-cal{font-size:0.85rem;font-weight:700;color:var(--accent2);}
-.li-delete{background:none;border:none;color:var(--text3);cursor:pointer;font-size:1rem;}
-.daily-totals{background:var(--accent);color:white;border-radius:var(--radius);padding:14px;margin-bottom:10px;}
+.li-name{font-size:0.84rem;font-weight:600;color:var(--text);}
+.li-qty{font-size:0.68rem;color:var(--text3);margin-top:1px;}
+.li-right{display:flex;align-items:center;gap:10px;}
+.li-cal{font-size:0.88rem;font-weight:700;color:var(--accent2);}
+.li-delete{background:none;border:none;color:var(--text3);cursor:pointer;font-size:1rem;padding:2px;}
+
+/* === DAILY TOTALS === */
+.daily-totals{background:var(--accent);color:white;border-radius:var(--radius);padding:16px;margin-bottom:12px;}
 .dt-row{display:flex;justify-content:space-between;margin-bottom:6px;}
-.dt-label{font-size:0.72rem;opacity:0.7;font-weight:500;}
-.dt-val{font-size:0.9rem;font-weight:700;}
-.dt-bar{height:5px;background:rgba(255,255,255,0.15);border-radius:3px;overflow:hidden;margin-top:10px;margin-bottom:4px;}
-.dt-fill{height:100%;background:var(--accent3);border-radius:3px;transition:width .4s;}
-.dt-macro-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;}
-.dt-macro{text-align:center;background:rgba(255,255,255,0.08);border-radius:8px;padding:7px 4px;}
-.dt-macro-val{font-size:0.9rem;font-weight:700;}
-.dt-macro-label{font-size:0.58rem;opacity:0.65;margin-top:1px;text-transform:uppercase;letter-spacing:0.5px;}
-.water-glasses{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:10px 0;}
-.glass-btn{width:38px;height:46px;border-radius:5px 5px 9px 9px;border:2px solid var(--water);background:transparent;cursor:pointer;position:relative;overflow:hidden;transition:all .2s;}
+.dt-label{font-size:0.7rem;opacity:0.65;font-weight:500;}
+.dt-val{font-size:0.95rem;font-weight:700;}
+.dt-bar{height:4px;background:rgba(255,255,255,0.12);border-radius:3px;overflow:hidden;margin-top:8px;margin-bottom:4px;}
+.dt-fill{height:100%;background:var(--accent3);border-radius:3px;transition:width .5s cubic-bezier(.4,0,.2,1);}
+.dt-macro-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px;}
+.dt-macro{text-align:center;background:rgba(255,255,255,0.07);border-radius:10px;padding:9px 4px;}
+.dt-macro-val{font-size:0.95rem;font-weight:700;}
+.dt-macro-label{font-size:0.56rem;opacity:0.6;margin-top:2px;text-transform:uppercase;letter-spacing:0.6px;}
+.dt-goal-row{display:flex;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.1);}
+.dt-goal-item{text-align:center;}
+.dt-goal-val{font-size:0.78rem;font-weight:600;}
+.dt-goal-label{font-size:0.56rem;opacity:0.55;text-transform:uppercase;letter-spacing:0.5px;}
+
+/* === WATER === */
+.water-glasses{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin:12px 0;}
+.glass-btn{width:40px;height:48px;border-radius:6px 6px 10px 10px;border:2px solid var(--water);background:transparent;cursor:pointer;position:relative;overflow:hidden;transition:all .2s;}
 .glass-btn.filled{background:var(--water);}
 .glass-btn::after{content:'💧';font-size:0.9rem;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);}
 .glass-btn.filled::after{content:'';}
-.water-count{font-size:1rem;font-weight:700;color:var(--water);text-align:center;}
-.water-note{font-size:0.72rem;color:var(--text3);text-align:center;margin-top:4px;}
-.search-filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
-.filter-chip{padding:5px 12px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font);font-size:0.73rem;font-weight:600;color:var(--text3);cursor:pointer;transition:all .15s;}
-.filter-chip.active{border-color:var(--accent2);background:#fff5ee;color:var(--accent2);}
+.water-count{font-size:1.05rem;font-weight:700;color:var(--water);text-align:center;}
+.water-note{font-size:0.7rem;color:var(--text3);text-align:center;margin-top:5px;}
+
+/* === SEARCH === */
+.search-filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.filter-chip{padding:6px 13px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font);font-size:0.72rem;font-weight:600;color:var(--text3);cursor:pointer;transition:all .15s;}
+.filter-chip.active{border-color:var(--accent2);background:#eef6ec;color:var(--accent2);}
 .search-bar{display:flex;gap:8px;margin-bottom:10px;}
-.search-bar input{flex:1;padding:10px 14px;border-radius:24px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font);font-size:0.85rem;color:var(--text);outline:none;}
+.search-bar input{flex:1;padding:11px 14px;border-radius:24px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font);font-size:0.85rem;color:var(--text);outline:none;}
 .search-bar input:focus{border-color:var(--accent2);}
-.search-bar button{padding:10px 16px;border-radius:24px;background:var(--accent2);color:white;border:none;font-family:var(--font);font-size:0.82rem;cursor:pointer;font-weight:600;}
-.ing-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
-.tag{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:4px 10px;font-size:0.72rem;color:var(--text2);display:flex;align-items:center;gap:4px;}
-.tag .remove{color:var(--red);font-weight:bold;cursor:pointer;}
-.result-card{background:var(--surface);border-radius:var(--radius);padding:12px 14px;margin-bottom:8px;border:1px solid var(--border);}
-.result-card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
-.result-day-label{font-size:0.8rem;font-weight:700;color:var(--accent);}
-.result-day-sub{font-size:0.68rem;color:var(--text3);}
-.result-slot-group{margin-bottom:6px;}
-.result-slot-name{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.8px;font-weight:700;color:var(--accent2);margin-bottom:3px;}
+.search-bar button{padding:11px 18px;border-radius:24px;background:var(--accent2);color:white;border:none;font-family:var(--font);font-size:0.82rem;cursor:pointer;font-weight:600;}
+.ing-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
+.tag{background:var(--surface);border:1.5px solid var(--accent2);border-radius:20px;padding:5px 11px;font-size:0.72rem;color:var(--accent2);display:flex;align-items:center;gap:5px;font-weight:600;}
+.tag .remove{color:var(--red);font-weight:bold;cursor:pointer;font-size:0.9rem;}
+.result-card{background:var(--surface);border-radius:var(--radius);padding:13px 15px;margin-bottom:8px;border:1px solid var(--border);box-shadow:var(--shadow-sm);}
+.result-card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;}
+.result-day-label{font-size:0.82rem;font-weight:700;color:var(--accent);}
+.result-day-sub{font-size:0.66rem;color:var(--text3);}
+.result-slot-group{margin-bottom:7px;}
+.result-slot-name{font-size:0.63rem;text-transform:uppercase;letter-spacing:0.9px;font-weight:700;color:var(--accent2);margin-bottom:4px;}
 .result-item{font-size:0.8rem;color:var(--text2);padding:1px 0;padding-left:10px;}
-.tip-card{background:var(--surface);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;border:1px solid var(--border);}
-.tip-head{display:flex;align-items:center;gap:8px;margin-bottom:11px;}
-.tip-icon{font-size:1.1rem;}
-.tip-head h3{font-size:0.88rem;font-weight:700;color:var(--accent);flex:1;}
+
+/* === TIPS === */
+.tip-card{background:var(--surface);border-radius:var(--radius);padding:16px;margin-bottom:12px;border:1px solid var(--border);box-shadow:var(--shadow-sm);}
+.tip-head{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;}
+.tip-icon-wrap{width:36px;height:36px;border-radius:10px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;margin-top:2px;}
+.tip-head-text{flex:1;}
+.tip-head h3{font-size:0.9rem;font-weight:700;color:var(--accent);line-height:1.3;}
+.tip-head-sub{font-size:0.66rem;color:var(--text3);margin-top:2px;}
 .tip-list{list-style:none;}
-.tip-list li{padding:7px 0;border-bottom:1px solid var(--border);font-size:0.8rem;color:var(--text2);line-height:1.45;display:flex;gap:8px;align-items:flex-start;}
-.tip-list li::before{flex-shrink:0;margin-top:1px;}
+.tip-list li{padding:8px 0;border-bottom:1px solid var(--border);font-size:0.8rem;color:var(--text2);line-height:1.5;display:flex;gap:9px;align-items:flex-start;}
+.tip-list li::before{flex-shrink:0;margin-top:2px;font-size:0.75rem;}
 .tip-good li::before{content:'✓';color:var(--green);font-weight:700;}
 .tip-bad li::before{content:'✗';color:var(--red);font-weight:700;}
+.tip-mixed li::before{content:'→';color:var(--warm);font-weight:700;}
 .tip-list li:last-child{border-bottom:none;}
-.badge{display:inline-block;padding:1px 7px;border-radius:10px;font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.3px;}
+.badge{display:inline-block;padding:1px 7px;border-radius:8px;font-size:0.58rem;font-weight:700;text-transform:uppercase;letter-spacing:0.3px;margin-left:4px;}
 .badge-t{background:#e8edff;color:#4a5ba8;}
 .badge-h{background:#fff0e8;color:#a85a2a;}
 .badge-a{background:#e8f8ee;color:#2a7a48;}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
-.cal-head{text-align:center;font-size:0.6rem;color:var(--text3);font-weight:700;padding:3px 0;}
-.cal-day{aspect-ratio:1;border-radius:8px;border:none;cursor:pointer;font-size:0.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all .15s;font-family:var(--font);}
-.summary-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);}
-.summary-row:last-child{border-bottom:none;}
-.summary-label{font-size:0.8rem;color:var(--text2);}
-.summary-val{font-size:0.85rem;font-weight:700;color:var(--text);}
-.grocery-section{margin-bottom:12px;}
-.grocery-title{font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--text3);margin-bottom:8px;}
-.grocery-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);}
+
+/* === GROCERY === */
+.grocery-section{margin-bottom:14px;}
+.grocery-title{font-size:0.65rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--text3);margin-bottom:9px;}
+.grocery-item{display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1px solid var(--border);}
 .grocery-item:last-child{border-bottom:none;}
-.grocery-check{width:20px;height:20px;border-radius:6px;border:2px solid var(--border);background:var(--surface3);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;font-size:0.7rem;}
+.grocery-check{width:22px;height:22px;border-radius:7px;border:2px solid var(--border);background:var(--surface3);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;font-size:0.72rem;}
 .grocery-check.checked{background:var(--green);border-color:var(--green);color:white;}
 .grocery-item-name{font-size:0.82rem;color:var(--text2);flex:1;}
 .grocery-item-name.checked-text{text-decoration:line-through;color:var(--text3);}
-.toast{position:fixed;top:75px;left:50%;transform:translateX(-50%);background:var(--accent);color:white;padding:9px 18px;border-radius:20px;font-size:0.78rem;font-weight:600;z-index:999;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap;}
+
+/* === TRACKER === */
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;}
+.cal-head{text-align:center;font-size:0.58rem;color:var(--text3);font-weight:700;padding:4px 0;text-transform:uppercase;}
+.cal-day{aspect-ratio:1;border-radius:10px;border:none;cursor:pointer;font-size:0.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all .18s;font-family:var(--font);}
+.summary-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);}
+.summary-row:last-child{border-bottom:none;}
+.summary-label{font-size:0.8rem;color:var(--text2);}
+.summary-val{font-size:0.85rem;font-weight:700;color:var(--text);}
+
+/* === MACRO TARGETS CARD === */
+.target-bar-wrap{margin-bottom:10px;}
+.target-bar-head{display:flex;justify-content:space-between;margin-bottom:5px;}
+.target-bar-name{font-size:0.75rem;color:var(--text2);font-weight:600;}
+.target-bar-val{font-size:0.72rem;color:var(--text3);}
+.target-bar-track{height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;}
+.target-bar-fill{height:100%;border-radius:3px;transition:width .5s;}
+.tbf-cal{background:var(--warm);}
+.tbf-prot{background:var(--accent2);}
+.tbf-carb{background:var(--gold);}
+.tbf-fat{background:var(--red);}
+
+/* === EMPTY STATE === */
+.empty-state{text-align:center;padding:40px 20px;color:var(--text3);}
+.empty-icon{font-size:2.4rem;margin-bottom:10px;opacity:0.6;}
+.empty-txt{font-size:0.82rem;line-height:1.5;}
+
+/* === TOAST === */
+.toast{position:fixed;top:80px;left:50%;transform:translateX(-50%);background:var(--accent);color:white;padding:10px 20px;border-radius:24px;font-size:0.78rem;font-weight:600;z-index:999;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,0.25);}
 .toast.show{opacity:1;}
-.empty-state{text-align:center;padding:36px 20px;color:var(--text3);}
-.empty-icon{font-size:2.2rem;margin-bottom:8px;}
-.empty-txt{font-size:0.82rem;}
+
+/* === PROFILE BANNER === */
+.profile-banner{background:linear-gradient(135deg,var(--accent) 0%,#2a4f28 100%);border-radius:var(--radius);padding:16px;margin-bottom:12px;color:white;}
+.pb-title{font-family:var(--font-serif);font-size:1rem;margin-bottom:10px;opacity:0.9;}
+.pb-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.pb-stat{text-align:center;background:rgba(255,255,255,0.07);border-radius:10px;padding:8px 4px;}
+.pb-val{font-size:1rem;font-weight:700;}
+.pb-label{font-size:0.56rem;opacity:0.6;text-transform:uppercase;letter-spacing:0.5px;margin-top:2px;}
+
+/* === BOTTOM NAV ICON === */
+@media(max-width:480px){
+  .tab-btn{font-size:0.68rem;padding:10px 10px;}
+}
 </style>
 </head>
 <body>
+
 <header class="header">
   <div class="header-top">
-    <div class="app-name">Nourish<span>.</span></div>
+    <div class="app-name">Nourish<em>.</em></div>
     <span class="date-chip" id="todayDate"></span>
   </div>
   <div class="nav-tabs">
     <button class="tab-btn active" onclick="switchTab('today',this)">Today</button>
     <button class="tab-btn" onclick="switchTab('macros',this)">Macros</button>
-    <button class="tab-btn" onclick="switchTab('search',this)">Find Meals</button>
+    <button class="tab-btn" onclick="switchTab('search',this)">Find</button>
     <button class="tab-btn" onclick="switchTab('grocery',this)">Grocery</button>
     <button class="tab-btn" onclick="switchTab('tips',this)">Tips</button>
     <button class="tab-btn" onclick="switchTab('tracker',this)">Tracker</button>
   </div>
 </header>
 
+<!-- TODAY TAB -->
 <div id="today" class="page active">
   <div class="day-hero">
     <div class="day-nav">
-      <button class="day-nav-btn" onclick="changeDay(-1)">&#8249;</button>
+      <button class="day-nav-btn" onclick="changeDay(-1)" aria-label="Previous day">&#8249;</button>
       <div class="day-center">
         <div class="day-label" id="dayLabel">Day 1 of 31</div>
         <div class="day-title" id="dayTitle">Wednesday</div>
+        <div class="day-subtitle" id="daySubtitle">Tap ✓ to log a meal &amp; track macros</div>
       </div>
-      <button class="day-nav-btn" onclick="changeDay(1)">&#8250;</button>
+      <button class="day-nav-btn" onclick="changeDay(1)" aria-label="Next day">&#8250;</button>
     </div>
     <div class="day-progress-bar"><div class="day-progress-fill" id="dayProgressFill" style="width:0%"></div></div>
-    <div class="day-progress-txt" id="dayProgressTxt">0 of 7 meals done</div>
+    <div class="day-progress-txt">
+      <span id="dayProgressTxt">0 of 7 meals done</span>
+      <span id="dayProgressPct">0%</span>
+    </div>
   </div>
   <div class="slots-toolbar">
-    <span class="toggle-row-label">Show dismissed meals</span>
+    <span class="toggle-row-label">Show dismissed</span>
     <button class="toggle" id="dismissToggle" onclick="toggleShowDismissed()"></button>
   </div>
   <div id="mealSlots"></div>
 </div>
 
+<!-- MACROS TAB -->
 <div id="macros" class="page">
   <h2 class="section-heading">Nutrition Log</h2>
-  <div class="card">
-    <div class="card-title">&#x1F4A7; Water Intake &mdash; Day <span id="waterDayNum">1</span></div>
-    <div class="water-glasses" id="waterGlasses"></div>
-    <div class="water-count"><span id="waterCount">0</span> / 10 glasses</div>
-    <div class="water-note">Target 2.5&ndash;3 litres daily &middot; tap a glass to log</div>
-  </div>
-  <div class="card">
-    <div class="card-title">&#x1F371; Log Food &mdash; search what you ate</div>
-    <div class="fl-search-row">
-      <input type="text" id="foodSearchInput" placeholder="e.g. moong dal, ragi cheela, paneer..." oninput="onFoodInput()" onkeydown="if(event.key==='Enter')pickFirstFood()">
-      <button onclick="pickFirstFood()">Add</button>
+
+  <div class="profile-banner">
+    <div class="pb-title">Your Fitness Profile</div>
+    <div class="pb-stats">
+      <div class="pb-stat"><div class="pb-val">62 kg</div><div class="pb-label">Weight</div></div>
+      <div class="pb-stat"><div class="pb-val">155 cm</div><div class="pb-label">Height</div></div>
+      <div class="pb-stat"><div class="pb-val">26.5</div><div class="pb-label">BMI</div></div>
     </div>
-    <div class="food-suggestions" id="foodSuggestions"></div>
-    <div class="logged-items" id="loggedItems"></div>
   </div>
+
   <div class="daily-totals">
     <div class="dt-row"><span class="dt-label">Calories Today</span><span class="dt-val" id="totalCal">&mdash; kcal</span></div>
     <div class="dt-bar"><div class="dt-fill" id="calBar" style="width:0%"></div></div>
+    <div class="dt-row" style="margin-top:4px"><span class="dt-label" style="font-size:0.6rem;opacity:0.5">Target: 1,300–1,500 kcal</span><span class="dt-label" id="calRemain" style="font-size:0.7rem;opacity:0.75"></span></div>
     <div class="dt-macro-grid">
       <div class="dt-macro"><div class="dt-macro-val" id="totalProt">&mdash;g</div><div class="dt-macro-label">Protein</div></div>
       <div class="dt-macro"><div class="dt-macro-val" id="totalCarb">&mdash;g</div><div class="dt-macro-label">Carbs</div></div>
       <div class="dt-macro"><div class="dt-macro-val" id="totalFat">&mdash;g</div><div class="dt-macro-label">Fat</div></div>
       <div class="dt-macro"><div class="dt-macro-val" id="totalFib">&mdash;g</div><div class="dt-macro-label">Fiber</div></div>
     </div>
+    <div class="dt-goal-row">
+      <div class="dt-goal-item"><div class="dt-goal-val" id="goalProt">80g</div><div class="dt-goal-label">Prot goal</div></div>
+      <div class="dt-goal-item"><div class="dt-goal-val" id="goalCarb">135g</div><div class="dt-goal-label">Carb goal</div></div>
+      <div class="dt-goal-item"><div class="dt-goal-val" id="goalFat">50g</div><div class="dt-goal-label">Fat goal</div></div>
+      <div class="dt-goal-item"><div class="dt-goal-val" id="goalFib">30g</div><div class="dt-goal-label">Fiber goal</div></div>
+    </div>
   </div>
+
   <div class="card">
-    <div class="card-title">&#x1F3AF; Daily Targets (Hypothyroid / Hashimoto's)</div>
-    <div class="summary-row"><span class="summary-label">Calories</span><span class="summary-val">1,400&ndash;1,600 kcal</span></div>
-    <div class="summary-row"><span class="summary-label">Protein</span><span class="summary-val">65&ndash;80 g</span></div>
-    <div class="summary-row"><span class="summary-label">Carbs (low-GI)</span><span class="summary-val">150&ndash;180 g</span></div>
-    <div class="summary-row"><span class="summary-label">Healthy Fats</span><span class="summary-val">40&ndash;55 g</span></div>
-    <div class="summary-row"><span class="summary-label">Fiber</span><span class="summary-val">25&ndash;35 g</span></div>
-    <div class="summary-row"><span class="summary-label">Iron</span><span class="summary-val">18&ndash;25 mg</span></div>
+    <div class="card-title">&#x1F4A7; Water Intake &mdash; Day <span id="waterDayNum">1</span></div>
+    <div class="water-glasses" id="waterGlasses"></div>
+    <div class="water-count"><span id="waterCount">0</span> / 10 glasses</div>
+    <div class="water-note">Target 2.5–3 litres daily · tap a glass to log</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">&#x1F371; Manual Food Log &mdash; add anything you ate</div>
+    <div class="fl-search-row">
+      <input type="text" id="foodSearchInput" placeholder="e.g. bhindi, paneer, banana shake..." oninput="onFoodInput()" onkeydown="if(event.key==='Enter')pickFirstFood()">
+      <button onclick="pickFirstFood()">Add</button>
+    </div>
+    <div class="food-suggestions" id="foodSuggestions"></div>
+    <div class="logged-items" id="loggedItems"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">&#x1F3AF; Daily Targets — Fat Loss + Toning (62kg / Workout 3-4×/wk)</div>
+    <div class="target-bar-wrap">
+      <div class="target-bar-head"><span class="target-bar-name">Calories</span><span class="target-bar-val">1,300–1,500 kcal</span></div>
+      <div class="target-bar-track"><div class="target-bar-fill tbf-cal" id="tbar-cal" style="width:0%"></div></div>
+    </div>
+    <div class="target-bar-wrap">
+      <div class="target-bar-head"><span class="target-bar-name">Protein</span><span class="target-bar-val">75–90 g · builds &amp; tones muscle</span></div>
+      <div class="target-bar-track"><div class="target-bar-fill tbf-prot" id="tbar-prot" style="width:0%"></div></div>
+    </div>
+    <div class="target-bar-wrap">
+      <div class="target-bar-head"><span class="target-bar-name">Carbs (low-GI)</span><span class="target-bar-val">120–150 g · fuel for gym days</span></div>
+      <div class="target-bar-track"><div class="target-bar-fill tbf-carb" id="tbar-carb" style="width:0%"></div></div>
+    </div>
+    <div class="target-bar-wrap">
+      <div class="target-bar-head"><span class="target-bar-name">Healthy Fats</span><span class="target-bar-val">40–55 g</span></div>
+      <div class="target-bar-track"><div class="target-bar-fill tbf-fat" id="tbar-fat" style="width:0%"></div></div>
+    </div>
+    <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border)">
+      <div class="summary-row"><span class="summary-label">Fiber</span><span class="summary-val">25–35 g</span></div>
+      <div class="summary-row"><span class="summary-label">Iron</span><span class="summary-val">18–25 mg</span></div>
+      <div class="summary-row"><span class="summary-label">Deficit for fat loss</span><span class="summary-val">~300–400 kcal/day</span></div>
+      <div class="summary-row"><span class="summary-label">TDEE estimate</span><span class="summary-val">~1,750–1,850 kcal</span></div>
+    </div>
+    <div style="margin-top:12px;background:var(--warm-bg);border-radius:10px;padding:10px 12px;font-size:0.76rem;color:var(--warm);line-height:1.5;">
+      <strong>Gym days:</strong> Eat upper calorie range (1,500 kcal) with extra protein &amp; carbs pre/post workout. <strong>Rest days:</strong> Stay at 1,300 kcal, more protein, fewer carbs.
+    </div>
   </div>
 </div>
 
+<!-- FIND MEALS TAB -->
 <div id="search" class="page">
-  <h2 class="section-heading">Find Meals by Ingredient</h2>
+  <h2 class="section-heading">Find Meals</h2>
   <div class="search-filters">
     <button class="filter-chip active" onclick="setSlotFilter('all',this)">All Meals</button>
     <button class="filter-chip" onclick="setSlotFilter('morning',this)">Morning</button>
@@ -280,93 +428,190 @@ h1,h2,h3,h4{font-family:var(--font);font-weight:700;}
     <button class="filter-chip" onclick="setSlotFilter('dinner',this)">Dinner</button>
   </div>
   <div class="search-bar">
-    <input type="text" id="ingSearch" placeholder="e.g. paneer, ragi, avocado..." onkeydown="if(event.key==='Enter')addIngredient()">
+    <input type="text" id="ingSearch" placeholder="e.g. paneer, ragi, bhindi..." onkeydown="if(event.key==='Enter')addIngredient()">
     <button onclick="addIngredient()">Add</button>
   </div>
   <div class="ing-tags" id="ingTags"></div>
-  <div id="searchResults"><div class="empty-state"><div class="empty-icon">&#x1F50D;</div><div class="empty-txt">Add ingredients above to find matching meals across all 31 days</div></div></div>
+  <div id="searchResults"><div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-txt">Add ingredients above to find matching meals across all 31 days</div></div></div>
 </div>
 
+<!-- GROCERY TAB -->
 <div id="grocery" class="page">
   <h2 class="section-heading">Grocery List</h2>
   <div class="card" id="groceryCard">
-    <div class="card-title">&#x1F4CB; Next Day's Ingredients</div>
+    <div class="card-title">📋 Next Day's Ingredients</div>
     <div id="groceryContent"></div>
   </div>
   <div class="card">
-    <div class="card-title">&#x1F4E6; Always Keep Stocked</div>
+    <div class="card-title">📦 Always Keep Stocked</div>
     <div class="grocery-section"><div class="grocery-title">Flours &amp; Grains</div><div id="staplesFlour"></div></div>
     <div class="grocery-section"><div class="grocery-title">Nuts, Seeds &amp; Dry Fruits</div><div id="staplesNuts"></div></div>
     <div class="grocery-section"><div class="grocery-title">Pantry Staples</div><div id="staplesPantry"></div></div>
   </div>
 </div>
 
+<!-- TIPS TAB -->
 <div id="tips" class="page">
   <h2 class="section-heading">Health Guidelines</h2>
+
   <div class="tip-card">
-    <div class="tip-head"><span class="tip-icon">&#x1F33F;</span><h3>Eat More &mdash; Thyroid &amp; Autoimmune <span class="badge badge-t">Thyroid</span> <span class="badge badge-h">Hashimoto's</span></h3></div>
+    <div class="tip-head">
+      <div class="tip-icon-wrap">💪</div>
+      <div class="tip-head-text">
+        <h3>Workout Nutrition — Fat Loss &amp; Toning<span class="badge badge-a">Gym</span></h3>
+        <div class="tip-head-sub">For 62kg, 155cm — 3-4 gym sessions/week</div>
+      </div>
+    </div>
     <ul class="tip-list tip-good">
-      <li>Selenium: sunflower seeds, pumpkin seeds &mdash; supports T4&rarr;T3 conversion</li>
-      <li>Zinc: moong dal, chickpeas, pumpkin seeds &mdash; thyroid hormone synthesis</li>
+      <li>Pre-workout (1hr before): banana + 4 soaked almonds or sattu drink — quick carbs + protein</li>
+      <li>Post-workout (within 30 min): paneer 50g or moong dal cheela — repair &amp; build muscle</li>
+      <li>Gym days: eat 1,500 kcal; rest days: 1,300 kcal — cycle calories for better results</li>
+      <li>Protein goal 80–90g/day: spread across all meals, not just one sitting</li>
+      <li>Strength train 3-4×/wk + walk 7,000 steps daily = optimal fat loss + toning combo</li>
+      <li>Don't skip meals on gym days — thyroid slows metabolism further when under-fuelled</li>
+      <li>Post-dinner haldi milk aids muscle recovery and reduces cortisol spike from training</li>
+    </ul>
+  </div>
+
+  <div class="tip-card">
+    <div class="tip-head">
+      <div class="tip-icon-wrap">🌿</div>
+      <div class="tip-head-text">
+        <h3>Eat More — Thyroid &amp; Autoimmune<span class="badge badge-t">Thyroid</span><span class="badge badge-h">Hashimoto's</span></h3>
+      </div>
+    </div>
+    <ul class="tip-list tip-good">
+      <li>Selenium: sunflower seeds, pumpkin seeds — supports T4→T3 conversion</li>
+      <li>Zinc: moong dal, chickpeas, pumpkin seeds — thyroid hormone synthesis</li>
       <li>Anti-inflammatory: haldi (daily ✓), walnut, ginger, flaxseed</li>
-      <li>Gut-health: curd, chanch, kadhi &mdash; reduces autoimmune activity</li>
-      <li>Iron + B12: ragi, spinach, legumes &mdash; fight fatigue (common in hypothyroid)</li>
-      <li>Magnesium: almonds, leafy greens &mdash; reduces muscle cramps &amp; fatigue</li>
+      <li>Gut-health: curd, chanch, kadhi — reduces autoimmune activity</li>
+      <li>Iron + B12: ragi, spinach, legumes — fight fatigue (common in hypothyroid)</li>
+      <li>Magnesium: almonds, leafy greens — reduces muscle cramps &amp; fatigue</li>
       <li>Vitamin D: morning sun 15 min + doctor-guided supplement</li>
     </ul>
   </div>
+
   <div class="tip-card">
-    <div class="tip-head"><span class="tip-icon">&#x1F6AB;</span><h3>Avoid / Limit for Thyroid</h3></div>
+    <div class="tip-head">
+      <div class="tip-icon-wrap">🚫</div>
+      <div class="tip-head-text"><h3>Avoid / Limit for Thyroid</h3></div>
+    </div>
     <ul class="tip-list tip-bad">
-      <li>Raw gobhi, broccoli, kale &mdash; always cook; cooking destroys goitrogens</li>
-      <li>Soy in excess &mdash; blocks thyroid hormone uptake; space 4 hr from medication</li>
-      <li>Gluten (for Hashimoto's) &mdash; your plan uses gluten-free bread ✓</li>
-      <li>Refined sugar, maida &mdash; spikes cortisol, worsens inflammation</li>
-      <li>Coffee/tea within 60 min of thyroid meds &mdash; impairs absorption</li>
-      <li>Alcohol &mdash; impairs T4&rarr;T3 conversion and disrupts sleep</li>
+      <li>Raw gobhi, broccoli, kale — always cook; cooking destroys goitrogens</li>
+      <li>Soy in excess — blocks thyroid hormone uptake; space 4 hr from medication</li>
+      <li>Gluten (for Hashimoto's) — your plan uses gluten-free bread ✓</li>
+      <li>Refined sugar, maida — spikes cortisol, worsens inflammation</li>
+      <li>Coffee/tea within 60 min of thyroid meds — impairs absorption</li>
+      <li>Alcohol — impairs T4→T3 conversion and disrupts sleep</li>
     </ul>
   </div>
+
   <div class="tip-card">
-    <div class="tip-head"><span class="tip-icon">&#x1F486;</span><h3>Hair Growth &amp; Alopecia <span class="badge badge-a">Hair</span></h3></div>
+    <div class="tip-head">
+      <div class="tip-icon-wrap">💇</div>
+      <div class="tip-head-text">
+        <h3>Hair Growth &amp; Alopecia<span class="badge badge-a">Hair</span></h3>
+      </div>
+    </div>
     <ul class="tip-list tip-good">
-      <li>Iron is critical &mdash; low ferritin = hair loss; dal + spinach + ragi daily</li>
-      <li>Vitamin C with iron foods &mdash; lemon/carrot with dal boosts iron absorption 3×</li>
-      <li>Biotin: almonds, eggs, sweet potato &mdash; keratin structure support</li>
-      <li>Silica: oats, cucumber &mdash; strengthens hair shaft</li>
-      <li>Collagen precursors: amla, lemon, chickpeas &mdash; natural collagen formation</li>
-      <li>Hydration &mdash; dehydration directly stresses hair follicles; hit 10 glasses ✓</li>
-      <li>Scalp: coconut/brahmi oil massage 2x week; avoid SLS shampoos</li>
+      <li>Iron is critical — low ferritin = hair loss; dal + spinach + ragi daily</li>
+      <li>Vitamin C with iron foods — lemon/carrot with dal boosts iron absorption 3×</li>
+      <li>Biotin: almonds, eggs, sweet potato — keratin structure support</li>
+      <li>Silica: oats, cucumber — strengthens hair shaft</li>
+      <li>Collagen precursors: amla, lemon, chickpeas — natural collagen formation</li>
+      <li>Hydration — dehydration directly stresses hair follicles; hit 10 glasses ✓</li>
+      <li>Scalp: coconut/brahmi oil massage 2× week; avoid SLS shampoos</li>
     </ul>
   </div>
+
   <div class="tip-card">
-    <div class="tip-head"><span class="tip-icon">&#x26A1;</span><h3>Daily Wellness Habits</h3></div>
+    <div class="tip-head">
+      <div class="tip-icon-wrap">⚡</div>
+      <div class="tip-head-text"><h3>Daily Wellness Habits</h3></div>
+    </div>
     <ul class="tip-list tip-good">
-      <li>Walk 5 min after every meal &mdash; improves blood sugar, boosts metabolism ✓</li>
+      <li>Walk 5 min after every meal — improves blood sugar, boosts metabolism ✓</li>
       <li>Morning drink first (methi dana water / chia drink / haldi pani) on empty stomach</li>
-      <li>Add curd to each meal &mdash; probiotics reduce autoimmune inflammation</li>
-      <li>Zeera tea after lunch/dinner &mdash; reduces bloating, aids digestion ✓</li>
-      <li>Never skip meals &mdash; thyroid conditions slow metabolism further</li>
-      <li>7&ndash;8 hrs sleep &mdash; leptin and thyroid hormones reset during sleep</li>
-      <li>Haldi + almond milk at night &mdash; reduces evening cortisol, aids deep sleep</li>
+      <li>Add curd to each meal — probiotics reduce autoimmune inflammation</li>
+      <li>Zeera tea after lunch/dinner — reduces bloating, aids digestion ✓</li>
+      <li>Never skip meals — thyroid conditions slow metabolism further</li>
+      <li>7–8 hrs sleep — leptin and thyroid hormones reset during sleep</li>
+      <li>Haldi + almond milk at night — reduces evening cortisol, aids deep sleep</li>
     </ul>
   </div>
+
   <div class="tip-card">
-    <div class="tip-head"><span class="tip-icon">&#x1F504;</span><h3>Seasonal Swaps for Hard-to-Find Ingredients</h3></div>
+    <div class="tip-head">
+      <div class="tip-icon-wrap">🔄</div>
+      <div class="tip-head-text"><h3>Seasonal Swaps for Hard-to-Find Ingredients</h3></div>
+    </div>
     <ul class="tip-list tip-good">
-      <li><strong>Blueberries &rarr; Jamun</strong> (June&ndash;Aug) or Anar &mdash; same anthocyanins, thyroid-protective</li>
-      <li><strong>Avocado &rarr; Banana + walnuts</strong> &mdash; similar healthy fat profile, easier to source</li>
-      <li><strong>Strawberry &rarr; Amla or Guava</strong> &mdash; 3× more Vit C, anti-inflammatory, widely available</li>
-      <li><strong>Greek yoghurt &rarr; Hung curd (chakka dahi)</strong> &mdash; same protein, made at home</li>
-      <li><strong>Kale &rarr; Palak or Methi</strong> &mdash; equal iron + folate, year-round Indian availability</li>
-      <li><strong>Quinoa &rarr; Ragi or Foxtail millet (Kangni)</strong> &mdash; same protein, traditionally Indian</li>
+      <li><strong>Blueberries → Jamun</strong> (June–Aug) or Anar — same anthocyanins, thyroid-protective</li>
+      <li><strong>Avocado → Banana + walnuts</strong> — similar healthy fat profile, easier to source</li>
+      <li><strong>Strawberry → Amla or Guava</strong> — 3× more Vit C, anti-inflammatory, widely available</li>
+      <li><strong>Greek yoghurt → Hung curd (chakka dahi)</strong> — same protein, made at home</li>
+      <li><strong>Kale → Palak or Methi</strong> — equal iron + folate, year-round Indian availability</li>
+      <li><strong>Quinoa → Ragi or Foxtail millet (Kangni)</strong> — same protein, traditionally Indian</li>
+    </ul>
+  </div>
+
+  <div class="tip-card">
+    <div class="tip-head">
+      <div class="tip-icon-wrap">🧪</div>
+      <div class="tip-head-text">
+        <h3>Stomach Acid &amp; Digestion — The Missing Link<span class="badge badge-t">Thyroid</span></h3>
+      </div>
+    </div>
+    <ul class="tip-list tip-good">
+      <li>Chew each bite 20–30 times — mechanical chewing triggers stomach acid production</li>
+      <li>Lemon water 10 min before meals — stimulates HCl, prepares gut for nutrient absorption</li>
+      <li>Low stomach acid = poor absorption of iodine, selenium, zinc, B-vitamins — all critical for T4→T3</li>
+      <li>Signs of low acid: bloating after meals, heartburn, food sensitivities, persistent iron/B12 deficiency</li>
+      <li>Prebiotic foods daily: garlic, onions, methi, high-fiber vegetables like bhindi and tinda</li>
+      <li>Avoid processed/packaged foods — deplete stomach acid over time, worsen thyroid function</li>
+    </ul>
+  </div>
+
+  <div class="tip-card">
+    <div class="tip-head">
+      <div class="tip-icon-wrap">🧠</div>
+      <div class="tip-head-text">
+        <h3>Mind–Gut–Thyroid Axis<span class="badge badge-h">Hashimoto's</span></h3>
+      </div>
+    </div>
+    <ul class="tip-list tip-good">
+      <li>Stress → cortisol spike → shuts digestion → disrupts gut bacteria → leaky gut → Hashimoto's flares</li>
+      <li>Gut produces 90% of serotonin; unhealthy gut = low mood, anxiety, brain fog with thyroid</li>
+      <li>5–10 min deep breathing before meals activates parasympathetic system, improves absorption</li>
+      <li>Journaling/emotional processing — unresolved stress directly manifests as thyroid and gut symptoms</li>
+      <li>Avoid overexercising — HIIT spikes cortisol, harms gut and thyroid; walks + yoga preferred</li>
+      <li>No screens 30 min before bed — blue light disrupts melatonin, raises cortisol overnight</li>
+      <li>Limit caffeine after noon — overstimulates nervous system, disrupts healthy gut bacteria balance</li>
+    </ul>
+  </div>
+
+  <div class="tip-card">
+    <div class="tip-head">
+      <div class="tip-icon-wrap">📋</div>
+      <div class="tip-head-text"><h3>Common Myths — Know the Facts</h3></div>
+    </div>
+    <ul class="tip-list tip-mixed">
+      <li><strong>Myth: TSH test alone is enough.</strong> Fact: Insist on free T3, free T4, and thyroid antibodies (TPO/TgAb) for complete picture</li>
+      <li><strong>Myth: Iodine supplements help hypothyroidism.</strong> Fact: Excess iodine worsens Hashimoto's — get it only from food (salt, dairy)</li>
+      <li><strong>Myth: Hypothyroid only causes weight gain.</strong> Fact: Also hair loss, depression, muscle weakness, cold sensitivity, constipation, skin issues</li>
+      <li><strong>Myth: You must take medication forever.</strong> Fact: Many reduce dose by fixing root causes (stress, diet, gut) under doctor's guidance</li>
+      <li><strong>Myth: Herbs fully cure thyroid.</strong> Fact: Ashwagandha/guggul support function but cannot replace thyroid hormone replacement</li>
+      <li><strong>Myth: Only women get it.</strong> Fact: Men and children get it too; men are significantly underdiagnosed</li>
+      <li><strong>Myth: Diet alone cures thyroid.</strong> Fact: Diet is one pillar; stress management, sleep, gut health, and movement are equally essential</li>
     </ul>
   </div>
 </div>
 
+<!-- TRACKER TAB -->
 <div id="tracker" class="page">
   <h2 class="section-heading">31-Day Tracker</h2>
   <div class="card">
-    <div class="card-title">&#x1F4C5; Monthly Overview &mdash; tap a day</div>
+    <div class="card-title">📅 Monthly Overview — tap a day</div>
     <div class="cal-grid" id="calGrid"></div>
   </div>
   <div class="card" id="trackerDetail" style="display:none">
@@ -374,7 +619,7 @@ h1,h2,h3,h4{font-family:var(--font);font-weight:700;}
     <div id="trackerDetailContent"></div>
   </div>
   <div class="card">
-    <div class="card-title">&#x1F3C6; Monthly Stats</div>
+    <div class="card-title">🏆 Monthly Stats</div>
     <div id="monthlyStats"></div>
   </div>
 </div>
@@ -390,7 +635,32 @@ h1,h2,h3,h4{font-family:var(--font);font-weight:700;}
   </div>
 </div>
 
-<!-- QTY MODAL -->
+<!-- MEAL LOG MODAL (from tick) -->
+<div class="modal-overlay" id="mealLogModal" onclick="if(event.target===this)closeMealLog()">
+  <div class="meal-log-sheet">
+    <div class="modal-handle"></div>
+    <div class="ml-slot-banner">
+      <div class="ml-slot-name" id="mlSlotName">Breakfast</div>
+      <div class="ml-slot-title" id="mlSlotTitle">Log what you ate</div>
+    </div>
+    <div class="ml-items-label">Adjust quantities (default = 1 serving):</div>
+    <div id="mlItemRows"></div>
+    <div class="ml-preview" id="mlPreview">
+      <div class="ml-preview-title">Estimated Nutrition</div>
+      <div class="ml-preview-macros">
+        <div class="ml-preview-m"><div class="ml-preview-v" id="mlCal">0</div><div class="ml-preview-l">kcal</div></div>
+        <div class="ml-preview-m"><div class="ml-preview-v" id="mlProt">0g</div><div class="ml-preview-l">Protein</div></div>
+        <div class="ml-preview-m"><div class="ml-preview-v" id="mlCarb">0g</div><div class="ml-preview-l">Carbs</div></div>
+        <div class="ml-preview-m"><div class="ml-preview-v" id="mlFat">0g</div><div class="ml-preview-l">Fat</div></div>
+        <div class="ml-preview-m"><div class="ml-preview-v" id="mlFib">0g</div><div class="ml-preview-l">Fiber</div></div>
+      </div>
+    </div>
+    <button class="ml-confirm" onclick="confirmMealLog()">✓ Mark Eaten &amp; Save Macros</button>
+    <button class="modal-close" style="margin-top:8px" onclick="closeMealLog()">Skip — just mark done</button>
+  </div>
+</div>
+
+<!-- QTY MODAL (food search) -->
 <div class="qty-modal" id="qtyModal" onclick="if(event.target===this)closeQty()">
   <div class="qty-sheet">
     <div class="modal-handle"></div>
@@ -405,115 +675,258 @@ h1,h2,h3,h4{font-family:var(--font);font-weight:700;}
 <div class="toast" id="toast"></div>
 
 <script>
-const MEAL_PLAN=[{day:1,dayName:"Wednesday",morning:["6 soaked almonds","2 walnut","1 glass cucumber detox chia seed drink"],breakfast:["Avocado paneer toast (2)","1 cup green tea","Alt: oats cheela add beetroot (2)"],midday:["1 Katori pomegranate","1 carrot"],lunch:["1 bowl mix dal","1 palak bathua stuffed roti"],snack:["1 cup blueberry yogurt","Alt: 1 glass sattu drink"],dinner:["Paneer Bhurji (1 Katori)","1 Multigrain Phulka"],postdinner:["1 cup Haldi milk"]},{day:2,dayName:"Thursday",morning:["6 soaked almonds","2 walnut","1 glass cucumber detox chia seed drink"],breakfast:["2 Moong dal paneer cheela","1 Katori Ghia raita"],midday:["1 pear"],lunch:["1 bowl yellow dal","2 multigrain Phulka","1 glass chanch"],snack:["1 Katori roasted makhana","1 cup green tea"],dinner:["tinda curry (1 Katori)","2 ragi aata cheela","Alt: gazar beans (1 Katori)"],postdinner:["1 cup zeera tea","4 soaked almonds"]},{day:3,dayName:"Friday",morning:["6 soaked almonds","2 walnut","1 glass chia seed drink"],breakfast:["ragi beetroot carrot beans cheela (2)","curd"],midday:["1 glass coconut water","1 spoon roasted seeds"],lunch:["1 Katori arhar dal","1 multigrain Phulka","1 glass chanch"],snack:["1 glass sattu drink"],dinner:["1 Katori sauteed zeera tinda or tinda curry","1 multigrain Phulka"],postdinner:["1 cup Haldi milk"]},{day:4,dayName:"Saturday",morning:["6 soaked almonds","2 walnut","1 glass chia seed drink"],breakfast:["1 Katori moong dal sprout add cucumber, carrot (boiled)","curd"],midday:["1 Katori pomegranate"],lunch:["1 medium Katori Matar paneer capsicum","1 multigrain Phulka","1 glass chanch"],snack:["1 Katori roasted murmure","1 cup green tea"],dinner:["1 bowl kadhi","1 plate rice"],postdinner:["1 cup Haldi milk"]},{day:5,dayName:"Sunday",morning:["6 soaked almonds","2 walnut","1 glass chia seed drink"],breakfast:["1 bowl Greek Yoghurt chia seed smoothie add strawberry, pomegranate","Alt: paneer carrot stuffed paratha (1) with 1 cup green tea"],midday:["1 glass coconut water","1 spoon roasted seeds"],lunch:["choliya paneer ki sabzi (1 Katori)","1 multigrain Phulka","1 Katori carrot raita"],snack:["1 Katori sweet corn boiled"],dinner:["1 bowl sambhar","4 pieces idli"],postdinner:["1 cup Haldi milk"]},{day:6,dayName:"Monday",morning:["6 soaked almonds","2 walnut","1 glass chia seed drink"],breakfast:["1 bowl vegetable daliya","curd"],midday:["1 apple"],lunch:["1 bowl Ghia kofta","1 multigrain Phulka","1 Katori Ghia raita"],snack:["1 bowl vegetable soup"],dinner:["1 plate vegetable pulao add Matar, paneer, beans"],postdinner:["1 cup Haldi milk"]},{day:7,dayName:"Tuesday",morning:["6 soaked almonds","2 walnut","1 glass chia seed drink"],breakfast:["1 bowl vegetable sabudana khichdi","1 Katori Greek yoghurt","Alt: 1 cup green tea"],midday:["1 Katori watermelon"],lunch:["aloo palak (1 bowl)","1 multigrain aata roti","1 Katori vegetable raita"],snack:["Sauteed paneer with capsicum (1 Katori)","1 cup green tea"],dinner:["1 bowl gazar tomato soup","1 suji uthappam","Alt: 1 rice aata uthappam"],postdinner:["1 cup turmeric tea"]},{day:8,dayName:"Wednesday",morning:["6 soaked almonds","2 walnut","1 glass chia seed drink"],breakfast:["gobhi stuffed mix aata paratha (1) with 1 cup green tea"],midday:["1 apple"],lunch:["bharwa karela or baingan bhaji (1 Katori) + 1 multigrain Phulka + 1 glass chanch"],snack:["1 Katori roasted makhana with 1 cup green tea"],dinner:["Vegetable quinoa (1 bowl) with 1 oats carrot cheela"],postdinner:["1 cup Haldi milk"]},{day:9,dayName:"Thursday",morning:["6 soaked almonds","2 walnut","1 glass Haldi pani"],breakfast:["1 methi stuffed oats cheela (1) with 1 cup green tea"],midday:["1 Katori strawberry"],lunch:["mix veggies add carrot, gobhi, lettuce, peas (1 Katori) + 1 multigrain Phulka"],snack:["1 glass sattu drink"],dinner:["1 Katori mix sprout (boiled) or ghia (1 Katori) with Phulka"],postdinner:["1 cup zeera tea","4 soaked almonds"]},{day:10,dayName:"Friday",morning:["4 soaked almonds","2 walnut","1 glass chia seed drink"],breakfast:["Vegetable namkeen vermicelli add peas, carrot, beans (1 Katori) + 1 besan spinach cheela"],midday:["1 guava"],lunch:["1 bowl mix dal add moong, chana, arhar + 1 bajra roti + 1 Katori curd"],snack:["1 Katori sweet potato add pomegranate"],dinner:["tofu capsicum (1 Katori) + 1 multigrain Phulka"],postdinner:["1 cup hot almond milk"]},{day:11,dayName:"Saturday",morning:["4 soaked almonds","2 walnut","1 glass chia seed drink"],breakfast:["1 ragi aata dosa with homemade chutney"],midday:["1 Katori papaya"],lunch:["lobhiya curry (1 Katori) + 1 multigrain Phulka + 1 plate salad add carrot, cucumber boiled"],snack:["1 Katori popcorn with 1 cup green tea"],dinner:["tinda curry (1 Katori) + aloo methi (1 Katori) + 1 multigrain Phulka"],postdinner:["1 cup hot almond milk"]},{day:12,dayName:"Sunday",morning:["6 soaked almonds","2 walnut","1 glass chia seed drink"],breakfast:["Vegetable rice idli (4-5) pieces with chutney"],midday:["1 apple"],lunch:["1 bowl moong dal + 1 multigrain aata roti + 1 plate salad boiled (carrot, cucumber, kakdi)"],snack:["Sauteed broccoli with avocado (1 Katori) with 1 cup green tea","Alt: boiled black chana add cucumber, carrot"],dinner:["Dal methi (1 Katori) with 1 multigrain Phulka"],postdinner:["1 cup zeera tea"]},{day:13,dayName:"Monday",morning:["6 soaked almonds","2 walnut","1 glass chia seed drink"],breakfast:["Vegetable poha (1 bowl) with 1 cup green tea"],midday:["1 banana"],lunch:["Dal makhani or black dal (1 Katori) + 1 multigrain Phulka + 1 glass chanch"],snack:["1 Katori wheat pasta add veggies"],dinner:["mix dal khichdi add half spoon ghee in it"],postdinner:["1 cup zeera tea"]},{day:14,dayName:"Tuesday",morning:["4 soaked almonds","2 walnut","1 glass methi dana water"],breakfast:["sattu paratha (1) with 1 cup of tea"],midday:["1 bowl watermelon"],lunch:["lijjat papad ki sabzi (1 Katori) + 1 Katori boiled sweet corn + 1 multigrain Phulka + 1 glass chanch","Alt: Baingan ka bharta"],snack:["1 cup green tea with roasted black chana"],dinner:["Vegetable quinoa (1 Katori) with 1 oats aata cheela with veggies"],postdinner:["1 cup turmeric tea","4 soaked almonds"]},{day:15,dayName:"Wednesday",morning:["4 soaked almonds","2 walnut","1 glass methi dana water"],breakfast:["Sauteed veggies add paneer, lettuce, capsicum, carrot (1 Katori) with 1 glass of ghia juice"],midday:["1 banana"],lunch:["Matar mushroom ki sabzi (1 Katori) + 1 chana aata roti + 1 glass chanch"],snack:["cucumber salad add yoghurt (1 Katori)"],dinner:["1 bowl vegetable soup"],postdinner:["1 cup turmeric tea","4 soaked almonds"]},{day:16,dayName:"Thursday",morning:["6 soaked almonds","2 walnut","1 glass methi dana water"],breakfast:["Dal missi roti stuffed with beetroot (1) with curd"],midday:["1 Katori pomegranate"],lunch:["Kadhi pakoda (1 Katori) + 1 oats aata roti + 1 plate salad include cucumber, carrot"],snack:["1 Katori blueberry yogurt add 1 spoon roasted seeds"],dinner:["Arhar Dal (1 bowl) + 1 Katori zeera rice + 1 multigrain Phulka + 1 glass chanch"],postdinner:["1 cup zeera tea"]},{day:17,dayName:"Friday",morning:["4 soaked almonds","2 walnut","1 glass methi dana water"],breakfast:["Vegetable sandwich (2) took gluten free bread with homemade chutney"],midday:["1 glass lemon water","1 spoon roasted seeds"],lunch:["Fali ki sabzi (1 Katori) + pudina chutney + 2 soy aata Phulka + 1 plate salad"],snack:["1 Katori moong dal sprout with 1 cup green tea"],dinner:["matar paneer (1 Katori) with 1 ragi aata roti"],postdinner:["1 cup Haldi milk"]},{day:18,dayName:"Saturday",morning:["6 soaked almonds","2 walnut","1 glass methi dana water"],breakfast:["moong dal vegetable idli (4-5) pieces with 1 cup green tea"],midday:["1 apple without chilka"],lunch:["gobhi matar (1 Katori) + 1 oats aata roti + 1 Katori ghia raita"],snack:["1 glass sattu drink"],dinner:["petha aloo (1 bowl) + 1 multigrain Phulka"],postdinner:["1 cup zeera tea"]},{day:19,dayName:"Sunday",morning:["4 soaked almonds","2 walnut","1 glass methi dana water"],breakfast:["moong dal sprout cheela add spinach, carrot (2) with 1 cup green tea"],midday:["1 glass coconut water"],lunch:["pyaz karele ki sabzi (1 Katori) or 1 bowl yellow dal + 1 chana aata Phulka + 1 plate salad"],snack:["1 Katori makhana kheer (use almond milk)"],dinner:["1 bowl vegetable pulao add paneer, capsicum, peas, carrot, sweet corn"],postdinner:["1 cup Haldi milk"]},{day:20,dayName:"Monday",morning:["6 soaked almonds","2 walnut","1 glass methi dana water"],breakfast:["oats chia seed pudding add blueberry, pomegranate (1 bowl)"],midday:["1 spoon roasted seeds","1 cup green tea"],lunch:["Black chola curry (1 bowl) + 1 oats aata roti + 1 plate salad include cucumber, carrot"],snack:["2 dhokla with 1 cup green tea"],dinner:["1 bowl mushroom soup or 1 bowl egg grated soup + 1 Besan paneer cheela"],postdinner:["1 cup zeera tea","4 soaked kishmish"]},{day:21,dayName:"Tuesday",morning:["6 soaked almonds","2 walnut","1 glass chia seed drink"],breakfast:["paneer paratha with less oil (1) with 1 cup green tea"],midday:["1 glass coconut water"],lunch:["hare pyaz aloo ki sabzi (1 Katori) + 1 oats aata roti + 1 Katori carrot beetroot raita"],snack:["1 glass sattu drink"],dinner:["ghia chana dal (1 bowl) + 1 multigrain Phulka"],postdinner:["1 cup zeera tea"]},{day:22,dayName:"Wednesday",morning:["4 soaked almonds","2 walnut","1 glass methi dana water"],breakfast:["Black boiled chana add carrot, capsicum, 1 cup yoghurt (1 bowl)"],midday:["1 Katori papaya"],lunch:["kadhi (1 bowl) + 1 plate zeera rice or 1 multigrain Phulka + 1 plate salad"],snack:["1 Katori bhel puri add Anar"],dinner:["paneer palak (1 Katori) + 1 multigrain Phulka"],postdinner:["1 cup Haldi milk"]},{day:23,dayName:"Thursday",morning:["6 soaked almonds","2 walnut","1 glass chia seed drink"],breakfast:["Ragi spinach cheela (2) with 1 cup green tea"],midday:["1 bowl watermelon"],lunch:["Rajma curry (1 Katori) + 1 oats aata roti + 1 plate salad"],snack:["1 moong dal Tikki with 1 cup of tea"],dinner:["1 bowl ghia carrot soup + 1 suji uthappam"],postdinner:["1 cup almond milk"]},{day:24,dayName:"Friday",morning:["6 soaked almonds","2 walnut","1 glass chia seed drink"],breakfast:["Besan methi carrot cheela (2) with 1 Katori carrot raita"],midday:["1 pear"],lunch:["1 bowl moong arhar dal + 1 oats aata roti + 1 Katori lettuce cucumber salad + 1 glass chanch"],snack:["1 glass coconut water with 1 spoon roasted seeds"],dinner:["kundru ki sabzi or sauteed tinda (1 bowl) + 1 multigrain Phulka"],postdinner:["1 cup zeera tea"]},{day:25,dayName:"Saturday",morning:["4 soaked almonds","2 walnut","1 glass chia seed drink"],breakfast:["1 bowl vegetable daliya (1 Katori) with 1 cup of tea"],midday:["1 bowl muskmelon"],lunch:["arbi ki sabzi (1 Katori) + 1 multigrain aata Phulka + 1 Katori ghia raita"],snack:["1 glass sattu drink with roasted makhana"],dinner:["soyabean curry (1 Katori) + 1 multigrain Phulka"],postdinner:["1 cup zeera tea"]},{day:26,dayName:"Sunday",morning:["6 soaked almonds","2 walnut","1 glass chia seed drink"],breakfast:["Avocado lettuce moong dal yoghurt chaat (1 bowl)"],midday:["1 apple without chilka"],lunch:["gobhi matar pulao (1 plate) + 1 Katori ghia raita"],snack:["1 Katori roasted murmure with 1 cup green tea"],dinner:["2 moong dal cheela add paneer with 1 Katori mix veggies"],postdinner:["1 cup zeera tea"]},{day:27,dayName:"Monday",morning:["4 soaked almonds","2 walnut","1 glass chia seed drink","Alt: 1 glass methi dana water"],breakfast:["methi oats stuffing paratha (1) with curd"],midday:["1 Katori strawberry","1 glass lemon water"],lunch:["1 bowl Mix veggies add carrot, paneer, gobhi, capsicum, peas or 1 bowl matar paneer + 1 multigrain Phulka + 1 Katori boondi raita"],snack:["Dhokla (2 pieces) + 1 cup green tea"],dinner:["Roasted soya kabab add spinach (3-4) with 1 medium plate vegetable pulao"],postdinner:["1 cup zeera tea"]},{day:28,dayName:"Tuesday",morning:["6 soaked almonds","2 walnut","1 glass chia seed drink"],breakfast:["chic pea toast (mashed white chola) add carrot, cucumber (1) with 1 cup green tea"],midday:["1 cup zeera tea","1 pear"],lunch:["aloo methi (1 Katori) + 1 multigrain aata roti + 1 glass chanch"],snack:["1 Katori oats chia pudding"],dinner:["1 bowl mushroom soup with 1 ragi aata cheela"],postdinner:["1 cup zeera tea"]},{day:29,dayName:"Wednesday",morning:["4 soaked almonds","2 walnut","1 glass methi dana water"],breakfast:["1 bowl vegetable sabudana khichdi with 1 Katori ghia raita"],midday:["1 apple"],lunch:["lobhiya curry (1 bowl) + 1 multigrain Phulka + 1 plate salad"],snack:["1 Katori bhel puri add Anar"],dinner:["1 plate kathal pulao with curd"],postdinner:["1 cup Haldi milk"]},{day:30,dayName:"Thursday",morning:["6 soaked almonds","2 walnut","1 glass chia seed drink"],breakfast:["Rice carrot cheela add suji (2) with 1 cup green tea"],midday:["1 Katori pomegranate"],lunch:["1 bowl mix dal + 1 Katori mix veggies + 1 multigrain Phulka + 1 plate salad"],snack:["1 bowl carrot beans soup"],dinner:["paneer capsicum bhurji (1 Katori) + 1 multigrain Phulka"],postdinner:["1 cup almond milk"]},{day:31,dayName:"Friday",morning:["6 soaked almonds","2 walnut","1 glass chia seed drink"],breakfast:["ragi beetroot carrot beans cheela (2)","curd"],midday:["1 glass coconut water","1 spoon roasted seeds"],lunch:["1 Katori arhar dal","1 multigrain Phulka","1 glass chanch"],snack:["1 glass sattu drink"],dinner:["1 Katori sauteed zeera tinda or tinda curry","1 multigrain Phulka"],postdinner:["1 cup Haldi milk"]}];
+// ====================== MEAL PLAN DATA ======================
+const MEAL_PLAN=[{day:1,dayName:"Wednesday",morning:["6 soaked almonds","2 walnut","1 glass cucumber detox chia seed drink"],breakfast:["Avocado paneer toast (2)","1 cup green tea","Alt: oats cheela add beetroot (2)"],midday:["1 Katori pomegranate","1 carrot"],lunch:["1 bowl mix dal","1 palak bathua stuffed roti"],snack:["1 cup blueberry yogurt","Alt: 1 glass sattu drink"],dinner:["Paneer Bhurji (1 Katori)","1 Multigrain Phulka"],postdinner:["1 cup Haldi milk"]},{day:2,dayName:"Thursday",morning:["6 soaked almonds","2 walnut","1 glass cucumber detox chia seed drink"],breakfast:["2 Moong dal paneer cheela","1 Katori Ghia raita"],midday:["1 pear"],lunch:["1 bowl yellow dal","2 multigrain Phulka","1 glass chanch"],snack:["1 Katori roasted makhana","1 cup green tea"],dinner:["tinda curry (1 Katori)","2 ragi aata cheela","Alt: gazar beans (1 Katori)"],postdinner:["1 cup zeera tea","4 soaked almonds"]},{day:3,dayName:"Friday",morning:["6 soaked almonds","2 walnut","1 glass chia seed drink"],breakfast:["ragi beetroot carrot beans cheela (2)","curd"],midday:["1 glass coconut water","1 spoon roasted seeds"],lunch:["1 Katori arhar dal","1 multigrain Phulka","1 glass chanch"],snack:["1 glass sattu drink"],dinner:["1 Katori sauteed zeera tinda or tinda curry","1 multigrain Phulka"],postdinner:["1 cup Haldi milk"]},{day:4,dayName:"Saturday",morning:["6 soaked almonds","2 walnut","1 glass chia seed drink"],breakfast:["1 Katori moong dal sprout add cucumber, carrot (boiled)","curd"],midday:["1 Katori pomegranate"],lunch:["1 medium Katori Matar paneer capsicum","1 multigrain Phulka","1 glass chanch"],snack:["1 Katori roasted murmure","1 cup green tea"],dinner:["1 bowl kadhi","1 plate rice"],postdinner:["1 cup Haldi milk"]},{day:5,dayName:"Sunday",morning:["6 soaked almonds","2 walnut","1 glass chia seed drink"],breakfast:["1 bowl Greek Yoghurt chia seed smoothie add strawberry, pomegranate","Alt: paneer carrot stuffed paratha (1) with 1 cup green tea"],midday:["1 glass coconut water","1 spoon roasted seeds"],lunch:["choliya paneer ki sabzi (1 Katori)","1 multigrain Phulka","1 Katori carrot raita"],snack:["1 Katori sweet corn boiled"],dinner:["1 bowl sambhar","4 pieces idli"],postdinner:["1 cup Haldi milk"]},{day:6,dayName:"Monday",morning:["6 soaked almonds","2 walnut","1 glass chia seed drink"],breakfast:["1 bowl vegetable daliya","curd"],midday:["1 apple"],lunch:["1 bowl Ghia kofta","1 multigrain Phulka","1 Katori Ghia raita"],snack:["1 bowl vegetable soup"],dinner:["1 plate vegetable pulao add Matar, paneer, beans"],postdinner:["1 cup Haldi milk"]},{day:7,dayName:"Tuesday",morning:["6 soaked almonds","2 walnut","1 glass chia seed drink"],breakfast:["1 bowl vegetable sabudana khichdi","1 Katori Greek yoghurt","Alt: 1 cup green tea"],midday:["1 Katori watermelon"],lunch:["aloo palak (1 bowl)","1 multigrain aata roti","1 Katori vegetable raita"],snack:["Sauteed paneer with capsicum (1 Katori)","1 cup green tea"],dinner:["1 bowl gazar tomato soup","1 suji uthappam","Alt: 1 rice aata uthappam"],postdinner:["1 cup turmeric tea"]},{day:8,dayName:"Wednesday",morning:["6 soaked almonds","2 walnut","1 glass chia seed drink"],breakfast:["gobhi stuffed mix aata paratha (1) with 1 cup green tea"],midday:["1 apple"],lunch:["bharwa karela or baingan bhaji (1 Katori) + 1 multigrain Phulka + 1 glass chanch"],snack:["1 Katori roasted makhana with 1 cup green tea"],dinner:["Vegetable quinoa (1 bowl) with 1 oats carrot cheela"],postdinner:["1 cup Haldi milk"]},{day:9,dayName:"Thursday",morning:["6 soaked almonds","2 walnut","1 glass Haldi pani"],breakfast:["1 methi stuffed oats cheela (1) with 1 cup green tea"],midday:["1 Katori strawberry"],lunch:["mix veggies add carrot, gobhi, lettuce, peas (1 Katori) + 1 multigrain Phulka"],snack:["1 glass sattu drink"],dinner:["1 Katori mix sprout (boiled) or ghia (1 Katori) with Phulka"],postdinner:["1 cup zeera tea","4 soaked almonds"]},{day:10,dayName:"Friday",morning:["4 soaked almonds","2 walnut","1 glass chia seed drink"],breakfast:["Vegetable namkeen vermicelli add peas, carrot, beans (1 Katori) + 1 besan spinach cheela"],midday:["1 guava"],lunch:["1 bowl mix dal add moong, chana, arhar + 1 bajra roti + 1 Katori curd"],snack:["1 Katori sweet potato add pomegranate"],dinner:["tofu capsicum (1 Katori) + 1 multigrain Phulka"],postdinner:["1 cup hot almond milk"]},{day:11,dayName:"Saturday",morning:["4 soaked almonds","2 walnut","1 glass chia seed drink"],breakfast:["1 ragi aata dosa with homemade chutney"],midday:["1 Katori papaya"],lunch:["lobhiya curry (1 Katori) + 1 multigrain Phulka + 1 plate salad add carrot, cucumber boiled"],snack:["1 Katori popcorn with 1 cup green tea"],dinner:["tinda curry (1 Katori) + aloo methi (1 Katori) + 1 multigrain Phulka"],postdinner:["1 cup hot almond milk"]},{day:12,dayName:"Sunday",morning:["6 soaked almonds","2 walnut","1 glass chia seed drink"],breakfast:["Vegetable rice idli (4-5) pieces with chutney"],midday:["1 apple"],lunch:["1 bowl moong dal + 1 multigrain aata roti + 1 plate salad boiled (carrot, cucumber, kakdi)"],snack:["Sauteed broccoli with avocado (1 Katori) with 1 cup green tea","Alt: boiled black chana add cucumber, carrot"],dinner:["Dal methi (1 Katori) with 1 multigrain Phulka"],postdinner:["1 cup zeera tea"]},{day:13,dayName:"Monday",morning:["6 soaked almonds","2 walnut","1 glass chia seed drink"],breakfast:["Vegetable poha (1 bowl) with 1 cup green tea"],midday:["1 banana"],lunch:["Dal makhani or black dal (1 Katori) + 1 multigrain Phulka + 1 glass chanch"],snack:["1 Katori wheat pasta add veggies"],dinner:["mix dal khichdi add half spoon ghee in it"],postdinner:["1 cup zeera tea"]},{day:14,dayName:"Tuesday",morning:["4 soaked almonds","2 walnut","1 glass methi dana water"],breakfast:["sattu paratha (1) with 1 cup of tea"],midday:["1 bowl watermelon"],lunch:["lijjat papad ki sabzi (1 Katori) + 1 Katori boiled sweet corn + 1 multigrain Phulka + 1 glass chanch","Alt: Baingan ka bharta"],snack:["1 cup green tea with roasted black chana"],dinner:["Vegetable quinoa (1 Katori) with 1 oats aata cheela with veggies"],postdinner:["1 cup turmeric tea","4 soaked almonds"]},{day:15,dayName:"Wednesday",morning:["4 soaked almonds","2 walnut","1 glass methi dana water"],breakfast:["Sauteed veggies add paneer, lettuce, capsicum, carrot (1 Katori) with 1 glass of ghia juice"],midday:["1 banana"],lunch:["Matar mushroom ki sabzi (1 Katori) + 1 chana aata roti + 1 glass chanch"],snack:["cucumber salad add yoghurt (1 Katori)"],dinner:["1 bowl vegetable soup"],postdinner:["1 cup turmeric tea","4 soaked almonds"]},{day:16,dayName:"Thursday",morning:["6 soaked almonds","2 walnut","1 glass methi dana water"],breakfast:["Dal missi roti stuffed with beetroot (1) with curd"],midday:["1 Katori pomegranate"],lunch:["Kadhi pakoda (1 Katori) + 1 oats aata roti + 1 plate salad include cucumber, carrot"],snack:["1 Katori blueberry yogurt add 1 spoon roasted seeds"],dinner:["Arhar Dal (1 bowl) + 1 Katori zeera rice + 1 multigrain Phulka + 1 glass chanch"],postdinner:["1 cup zeera tea"]},{day:17,dayName:"Friday",morning:["4 soaked almonds","2 walnut","1 glass methi dana water"],breakfast:["Vegetable sandwich (2) took gluten free bread with homemade chutney"],midday:["1 glass lemon water","1 spoon roasted seeds"],lunch:["Fali ki sabzi (bhindi) (1 Katori) + pudina chutney + 2 soy aata Phulka + 1 plate salad"],snack:["1 Katori moong dal sprout with 1 cup green tea"],dinner:["matar paneer (1 Katori) with 1 ragi aata roti"],postdinner:["1 cup Haldi milk"]},{day:18,dayName:"Saturday",morning:["6 soaked almonds","2 walnut","1 glass methi dana water"],breakfast:["moong dal vegetable idli (4-5) pieces with 1 cup green tea"],midday:["1 apple without chilka"],lunch:["gobhi matar (1 Katori) + 1 oats aata roti + 1 Katori ghia raita"],snack:["1 glass sattu drink"],dinner:["petha aloo (1 bowl) + 1 multigrain Phulka"],postdinner:["1 cup zeera tea"]},{day:19,dayName:"Sunday",morning:["4 soaked almonds","2 walnut","1 glass methi dana water"],breakfast:["moong dal sprout cheela add spinach, carrot (2) with 1 cup green tea"],midday:["1 glass coconut water"],lunch:["pyaz karele ki sabzi (1 Katori) or 1 bowl yellow dal + 1 chana aata Phulka + 1 plate salad"],snack:["1 Katori makhana kheer (use almond milk)"],dinner:["1 bowl vegetable pulao add paneer, capsicum, peas, carrot, sweet corn"],postdinner:["1 cup Haldi milk"]},{day:20,dayName:"Monday",morning:["6 soaked almonds","2 walnut","1 glass methi dana water"],breakfast:["oats chia seed pudding add blueberry, pomegranate (1 bowl)"],midday:["1 spoon roasted seeds","1 cup green tea"],lunch:["Black chola curry (1 bowl) + 1 oats aata roti + 1 plate salad include cucumber, carrot"],snack:["2 dhokla with 1 cup green tea"],dinner:["1 bowl mushroom soup or 1 bowl egg grated soup + 1 Besan paneer cheela"],postdinner:["1 cup zeera tea","4 soaked kishmish"]},{day:21,dayName:"Tuesday",morning:["6 soaked almonds","2 walnut","1 glass chia seed drink"],breakfast:["paneer paratha with less oil (1) with 1 cup green tea"],midday:["1 glass coconut water"],lunch:["hare pyaz aloo ki sabzi (1 Katori) + 1 oats aata roti + 1 Katori carrot beetroot raita"],snack:["1 glass sattu drink"],dinner:["ghia chana dal (1 bowl) + 1 multigrain Phulka"],postdinner:["1 cup zeera tea"]},{day:22,dayName:"Wednesday",morning:["4 soaked almonds","2 walnut","1 glass methi dana water"],breakfast:["Black boiled chana add carrot, capsicum, 1 cup yoghurt (1 bowl)"],midday:["1 Katori papaya"],lunch:["kadhi (1 bowl) + 1 plate zeera rice or 1 multigrain Phulka + 1 plate salad"],snack:["1 Katori bhel puri add Anar"],dinner:["paneer palak (1 Katori) + 1 multigrain Phulka"],postdinner:["1 cup Haldi milk"]},{day:23,dayName:"Thursday",morning:["6 soaked almonds","2 walnut","1 glass chia seed drink"],breakfast:["Ragi spinach cheela (2) with 1 cup green tea"],midday:["1 bowl watermelon"],lunch:["Rajma curry (1 Katori) + 1 oats aata roti + 1 plate salad"],snack:["1 moong dal Tikki with 1 cup of tea"],dinner:["1 bowl ghia carrot soup + 1 suji uthappam"],postdinner:["1 cup almond milk"]},{day:24,dayName:"Friday",morning:["6 soaked almonds","2 walnut","1 glass chia seed drink"],breakfast:["Besan methi carrot cheela (2) with 1 Katori carrot raita"],midday:["1 pear"],lunch:["1 bowl moong arhar dal + 1 oats aata roti + 1 Katori lettuce cucumber salad + 1 glass chanch"],snack:["1 glass coconut water with 1 spoon roasted seeds"],dinner:["kundru ki sabzi or sauteed tinda (1 bowl) + 1 multigrain Phulka"],postdinner:["1 cup zeera tea"]},{day:25,dayName:"Saturday",morning:["4 soaked almonds","2 walnut","1 glass chia seed drink"],breakfast:["1 bowl vegetable daliya (1 Katori) with 1 cup of tea"],midday:["1 bowl muskmelon"],lunch:["arbi ki sabzi (1 Katori) + 1 multigrain aata Phulka + 1 Katori ghia raita"],snack:["1 glass sattu drink with roasted makhana"],dinner:["soyabean curry (1 Katori) + 1 multigrain Phulka"],postdinner:["1 cup zeera tea"]},{day:26,dayName:"Sunday",morning:["6 soaked almonds","2 walnut","1 glass chia seed drink"],breakfast:["Avocado lettuce moong dal yoghurt chaat (1 bowl)"],midday:["1 apple without chilka"],lunch:["gobhi matar pulao (1 plate) + 1 Katori ghia raita"],snack:["1 Katori roasted murmure with 1 cup green tea"],dinner:["2 moong dal cheela add paneer with 1 Katori mix veggies"],postdinner:["1 cup zeera tea"]},{day:27,dayName:"Monday",morning:["4 soaked almonds","2 walnut","1 glass chia seed drink","Alt: 1 glass methi dana water"],breakfast:["methi oats stuffing paratha (1) with curd"],midday:["1 Katori strawberry","1 glass lemon water"],lunch:["1 bowl Mix veggies add carrot, paneer, gobhi, capsicum, peas or 1 bowl matar paneer + 1 multigrain Phulka + 1 Katori boondi raita"],snack:["Dhokla (2 pieces) + 1 cup green tea"],dinner:["Roasted soya kabab add spinach (3-4) with 1 medium plate vegetable pulao"],postdinner:["1 cup zeera tea"]},{day:28,dayName:"Tuesday",morning:["6 soaked almonds","2 walnut","1 glass chia seed drink"],breakfast:["chic pea toast (mashed white chola) add carrot, cucumber (1) with 1 cup green tea"],midday:["1 cup zeera tea","1 pear"],lunch:["aloo methi (1 Katori) + 1 multigrain aata roti + 1 glass chanch"],snack:["1 Katori oats chia pudding"],dinner:["1 bowl mushroom soup with 1 ragi aata cheela"],postdinner:["1 cup zeera tea"]},{day:29,dayName:"Wednesday",morning:["4 soaked almonds","2 walnut","1 glass methi dana water"],breakfast:["1 bowl vegetable sabudana khichdi with 1 Katori ghia raita"],midday:["1 apple"],lunch:["lobhiya curry (1 bowl) + 1 multigrain Phulka + 1 plate salad"],snack:["1 Katori bhel puri add Anar"],dinner:["1 plate kathal pulao with curd"],postdinner:["1 cup Haldi milk"]},{day:30,dayName:"Thursday",morning:["6 soaked almonds","2 walnut","1 glass chia seed drink"],breakfast:["Rice carrot cheela add suji (2) with 1 cup green tea"],midday:["1 Katori pomegranate"],lunch:["1 bowl mix dal + 1 Katori mix veggies + 1 multigrain Phulka + 1 plate salad"],snack:["1 bowl carrot beans soup"],dinner:["paneer capsicum bhurji (1 Katori) + 1 multigrain Phulka"],postdinner:["1 cup almond milk"]},{day:31,dayName:"Friday",morning:["6 soaked almonds","2 walnut","1 glass chia seed drink"],breakfast:["ragi beetroot carrot beans cheela (2)","curd"],midday:["1 glass coconut water","1 spoon roasted seeds"],lunch:["1 Katori arhar dal","1 multigrain Phulka","1 glass chanch"],snack:["1 glass sattu drink"],dinner:["1 Katori sauteed zeera tinda or tinda curry","1 multigrain Phulka"],postdinner:["1 cup Haldi milk"]}];
 
-const SLOT_META={morning:{label:"Morning Start",time:"8:00 AM",icon:"🌅"},breakfast:{label:"Breakfast",time:"10:00 AM",icon:"🍳"},midday:{label:"Mid-Day",time:"12:00 PM",icon:"🌤"},lunch:{label:"Lunch",time:"1:00–2:00 PM",icon:"🥘"},snack:{label:"Snack",time:"6:00 PM",icon:"🫐"},dinner:{label:"Dinner",time:"9:00 PM",icon:"🌙"},postdinner:{label:"Post Dinner",time:"10:30 PM",icon:"🍵"}};
-const SLOT_MACRO_EST={morning:{cal:90,p:3,c:4,f:7,fi:1},breakfast:{cal:280,p:14,c:32,f:10,fi:5},midday:{cal:80,p:2,c:18,f:1,fi:2},lunch:{cal:420,p:18,c:55,f:12,fi:8},snack:{cal:160,p:6,c:20,f:6,fi:3},dinner:{cal:380,p:16,c:48,f:10,fi:6},postdinner:{cal:80,p:3,c:8,f:3,fi:1}};
+const SLOT_META={
+  morning:{label:"Morning Start",time:"8:00 AM",icon:"🌅"},
+  breakfast:{label:"Breakfast",time:"10:00 AM",icon:"🍳"},
+  midday:{label:"Mid-Day",time:"12:00 PM",icon:"🌤"},
+  lunch:{label:"Lunch",time:"1:00–2:00 PM",icon:"🥘"},
+  snack:{label:"Snack",time:"6:00 PM",icon:"🫐"},
+  dinner:{label:"Dinner",time:"9:00 PM",icon:"🌙"},
+  postdinner:{label:"Post Dinner",time:"10:30 PM",icon:"🍵"}
+};
 
-const UNITS=[{id:'katori',label:'1 Katori',g:150},{id:'bowl',label:'1 Bowl',g:250},{id:'cup',label:'1 Cup',g:240},{id:'glass',label:'1 Glass',g:300},{id:'plate',label:'1 Plate',g:300},{id:'phulka',label:'1 Phulka',g:35},{id:'roti',label:'1 Roti',g:40},{id:'piece',label:'1 Piece',g:50},{id:'tbsp',label:'1 Tbsp',g:15},{id:'tsp',label:'1 Tsp',g:5},{id:'gram',label:'grams',g:1}];
+// Macro estimates per meal slot — used when meal logged via tick button
+const SLOT_MACRO_EST={
+  morning:{cal:85,p:4,c:5,f:7,fi:1},
+  breakfast:{cal:290,p:16,c:30,f:11,fi:5},
+  midday:{cal:70,p:2,c:16,f:1,fi:2},
+  lunch:{cal:410,p:20,c:52,f:12,fi:8},
+  snack:{cal:150,p:7,c:18,f:5,fi:3},
+  dinner:{cal:360,p:18,c:45,f:10,fi:6},
+  postdinner:{cal:75,p:3,c:8,f:3,fi:1}
+};
 
-const FOOD_DB=[
-{name:'Almonds (soaked)',kw:['almond','badam'],cal:579,p:21,c:22,f:50,fi:12,defaultG:6,defaultUnit:'piece'},
-{name:'Walnuts',kw:['walnut','akhrot'],cal:654,p:15,c:14,f:65,fi:7,defaultG:7,defaultUnit:'piece'},
-{name:'Paneer',kw:['paneer'],cal:265,p:18,c:4,f:20,fi:0,defaultG:80,defaultUnit:'katori'},
-{name:'Moong Dal',kw:['moong dal','moong'],cal:347,p:24,c:63,f:1,fi:16,defaultG:150,defaultUnit:'katori'},
-{name:'Arhar Dal',kw:['arhar','toor dal'],cal:343,p:22,c:63,f:1,fi:15,defaultG:150,defaultUnit:'bowl'},
-{name:'Mix Dal',kw:['mix dal'],cal:340,p:22,c:60,f:1,fi:14,defaultG:150,defaultUnit:'bowl'},
-{name:'Yellow Dal',kw:['yellow dal'],cal:340,p:22,c:60,f:1,fi:14,defaultG:150,defaultUnit:'bowl'},
-{name:'Chana Dal',kw:['chana dal'],cal:364,p:20,c:60,f:5,fi:17,defaultG:150,defaultUnit:'katori'},
-{name:'Rajma',kw:['rajma','kidney'],cal:127,p:9,c:23,f:1,fi:7,defaultG:150,defaultUnit:'katori'},
-{name:'Lobhiya',kw:['lobhiya','black eyed'],cal:116,p:8,c:21,f:1,fi:5,defaultG:150,defaultUnit:'katori'},
-{name:'Black Chana',kw:['black chana','kala chana','chola'],cal:364,p:19,c:61,f:5,fi:17,defaultG:100,defaultUnit:'katori'},
-{name:'Multigrain Phulka',kw:['phulka','multigrain roti','chapati'],cal:104,p:3,c:20,f:1,fi:2,defaultG:35,defaultUnit:'phulka'},
-{name:'Ragi Cheela',kw:['ragi cheela','ragi'],cal:128,p:5,c:25,f:1,fi:3,defaultG:60,defaultUnit:'piece'},
-{name:'Besan Cheela',kw:['besan cheela','besan'],cal:140,p:8,c:20,f:4,fi:4,defaultG:60,defaultUnit:'piece'},
-{name:'Oats Cheela',kw:['oats cheela'],cal:125,p:5,c:22,f:3,fi:3,defaultG:60,defaultUnit:'piece'},
-{name:'Sabudana Khichdi',kw:['sabudana'],cal:215,p:3,c:48,f:3,fi:1,defaultG:180,defaultUnit:'bowl'},
-{name:'Vegetable Daliya',kw:['daliya','broken wheat'],cal:142,p:5,c:26,f:3,fi:4,defaultG:200,defaultUnit:'bowl'},
-{name:'Poha',kw:['poha','flattened rice'],cal:130,p:3,c:28,f:1,fi:2,defaultG:180,defaultUnit:'bowl'},
-{name:'Vegetable Pulao',kw:['pulao','vegetable rice'],cal:150,p:4,c:30,f:3,fi:2,defaultG:250,defaultUnit:'plate'},
-{name:'Rice (boiled)',kw:['rice','zeera rice'],cal:130,p:3,c:28,f:0,fi:1,defaultG:200,defaultUnit:'plate'},
-{name:'Idli',kw:['idli'],cal:58,p:2,c:11,f:0,fi:1,defaultG:40,defaultUnit:'piece'},
-{name:'Dosa',kw:['dosa'],cal:133,p:4,c:24,f:3,fi:1,defaultG:80,defaultUnit:'piece'},
-{name:'Uthappam',kw:['uthappam','uttapam'],cal:140,p:5,c:25,f:3,fi:2,defaultG:90,defaultUnit:'piece'},
-{name:'Paratha',kw:['paratha'],cal:210,p:5,c:32,f:8,fi:2,defaultG:70,defaultUnit:'piece'},
-{name:'Quinoa',kw:['quinoa'],cal:120,p:5,c:21,f:2,fi:3,defaultG:180,defaultUnit:'katori'},
-{name:'Gobhi Sabzi',kw:['gobhi','cauliflower'],cal:70,p:4,c:10,f:2,fi:4,defaultG:150,defaultUnit:'katori'},
-{name:'Tinda Curry',kw:['tinda'],cal:65,p:2,c:10,f:2,fi:3,defaultG:150,defaultUnit:'katori'},
-{name:'Matar Paneer',kw:['matar paneer','paneer sabzi','palak paneer'],cal:200,p:12,c:10,f:14,fi:3,defaultG:150,defaultUnit:'katori'},
-{name:'Kadhi',kw:['kadhi'],cal:90,p:4,c:10,f:4,fi:1,defaultG:200,defaultUnit:'bowl'},
-{name:'Sambhar',kw:['sambhar'],cal:95,p:5,c:14,f:2,fi:4,defaultG:200,defaultUnit:'bowl'},
-{name:'Dal Khichdi',kw:['khichdi'],cal:150,p:6,c:28,f:3,fi:4,defaultG:250,defaultUnit:'bowl'},
-{name:'Vegetable Soup',kw:['vegetable soup','soup'],cal:55,p:2,c:10,f:1,fi:2,defaultG:250,defaultUnit:'bowl'},
-{name:'Curd / Dahi',kw:['curd','dahi','yoghurt','raita'],cal:61,p:3,c:5,f:3,fi:0,defaultG:150,defaultUnit:'katori'},
-{name:'Chanch / Buttermilk',kw:['chanch','buttermilk'],cal:22,p:1,c:3,f:1,fi:0,defaultG:300,defaultUnit:'glass'},
-{name:'Chia Seed Drink',kw:['chia seed drink','chia'],cal:35,p:1,c:4,f:2,fi:2,defaultG:300,defaultUnit:'glass'},
-{name:'Sattu Drink',kw:['sattu'],cal:65,p:4,c:12,f:1,fi:2,defaultG:300,defaultUnit:'glass'},
-{name:'Coconut Water',kw:['coconut water'],cal:19,p:0,c:4,f:0,fi:1,defaultG:300,defaultUnit:'glass'},
-{name:'Haldi Milk',kw:['haldi milk','turmeric milk'],cal:90,p:4,c:8,f:4,fi:0,defaultG:240,defaultUnit:'cup'},
-{name:'Almond Milk',kw:['almond milk'],cal:50,p:1,c:4,f:3,fi:1,defaultG:240,defaultUnit:'cup'},
-{name:'Green Tea',kw:['green tea'],cal:2,p:0,c:0,f:0,fi:0,defaultG:240,defaultUnit:'cup'},
-{name:'Zeera Tea',kw:['zeera tea'],cal:5,p:0,c:1,f:0,fi:0,defaultG:240,defaultUnit:'cup'},
-{name:'Roasted Makhana',kw:['makhana','fox nut'],cal:347,p:9,c:77,f:1,fi:14,defaultG:30,defaultUnit:'katori'},
-{name:'Pomegranate / Anar',kw:['pomegranate','anar'],cal:83,p:2,c:19,f:1,fi:4,defaultG:150,defaultUnit:'katori'},
-{name:'Apple',kw:['apple','seb'],cal:52,p:0,c:14,f:0,fi:2,defaultG:150,defaultUnit:'piece'},
-{name:'Banana',kw:['banana','kela'],cal:89,p:1,c:23,f:0,fi:3,defaultG:120,defaultUnit:'piece'},
-{name:'Papaya',kw:['papaya','papita'],cal:43,p:0,c:11,f:0,fi:2,defaultG:150,defaultUnit:'katori'},
-{name:'Watermelon',kw:['watermelon','tarbooz'],cal:30,p:1,c:8,f:0,fi:0,defaultG:200,defaultUnit:'bowl'},
-{name:'Sweet Potato',kw:['sweet potato','shakarkandi'],cal:86,p:2,c:20,f:0,fi:3,defaultG:150,defaultUnit:'katori'},
-{name:'Avocado',kw:['avocado'],cal:160,p:2,c:9,f:15,fi:7,defaultG:80,defaultUnit:'katori'},
-{name:'Tofu',kw:['tofu'],cal:76,p:8,c:2,f:4,fi:0,defaultG:100,defaultUnit:'katori'},
-{name:'Mushroom',kw:['mushroom'],cal:22,p:3,c:3,f:0,fi:1,defaultG:100,defaultUnit:'katori'},
-{name:'Dhokla',kw:['dhokla'],cal:160,p:6,c:28,f:3,fi:2,defaultG:60,defaultUnit:'piece'},
-{name:'Sweet Corn (boiled)',kw:['sweet corn','corn'],cal:96,p:3,c:21,f:1,fi:2,defaultG:150,defaultUnit:'katori'},
-{name:'Sprouts (moong)',kw:['sprout','moong sprout'],cal:30,p:3,c:6,f:0,fi:2,defaultG:100,defaultUnit:'katori'}
+const UNITS=[
+  {id:'piece',label:'1 Piece',g:1,note:'count'},
+  {id:'katori',label:'1 Katori',g:150},
+  {id:'bowl',label:'1 Bowl',g:250},
+  {id:'cup',label:'1 Cup',g:240},
+  {id:'glass',label:'1 Glass',g:300},
+  {id:'plate',label:'1 Plate',g:300},
+  {id:'phulka',label:'1 Phulka',g:35},
+  {id:'roti',label:'1 Roti',g:40},
+  {id:'tbsp',label:'1 Tbsp',g:15},
+  {id:'gram',label:'grams',g:1}
 ];
 
-const SWAPS={blueberry:[{name:'Jamun (June–Aug)',why:'Same anthocyanins and antioxidants; thyroid-protective, widely available in India',pills:['Anti-inflammatory','Thyroid-safe','Budget-friendly']},{name:'Anar / Pomegranate',why:'Rich in polyphenols; anti-inflammatory, good for Hashimoto\'s, year-round',pills:['Anti-inflammatory','Hair-friendly','Iron-boost']},{name:'Mixed berries from frozen',why:'Frozen ber or jamun available at better grocery stores, retains all nutrition',pills:['Convenient','Year-round','Same benefits']}],avocado:[{name:'Ripe banana + 5 walnuts',why:'Similar monounsaturated fat profile; easier to source, digestive-friendly',pills:['Similar fats','Thyroid-safe','Budget']},{name:'Peanut butter (1 tbsp)',why:'Same healthy fat, vitamin E; use homemade on toast or paratha',pills:['Similar fats','Budget','Available']},{name:'Paneer (extra serving)',why:'Adds fat + protein when avocado is unavailable in your area',pills:['High-protein','Local','Thyroid-safe']}],strawberry:[{name:'Amla (Indian Gooseberry)',why:'3x more Vitamin C than strawberry; thyroid and hair health superstar',pills:['3x Vit-C','Hair growth','Thyroid']},{name:'Guava (Amrood)',why:'Similar Vit C, digestive fibre, year-round and cheap',pills:['High Vit-C','Affordable','Year-round']},{name:'Kiwi',why:'Available in most cities Oct–Feb, high in Vit C and selenium',pills:['Vit-C','Selenium','Thyroid']}],greek:[{name:'Hung curd (chakka dahi)',why:'Strain regular dahi overnight — identical protein; zero extra cost',pills:['Same protein','Homemade','Probiotic']},{name:'Paneer blended into dahi',why:'Blend paneer cubes into dahi for a thick, high-protein base',pills:['High protein','Calcium','Budget']}],broccoli:[{name:'Palak (Spinach)',why:'Equal iron + folate, readily available, no goitrogen concern when cooked',pills:['Iron-rich','Folate','Year-round']},{name:'Methi leaves',why:'Excellent for blood sugar, hair, and thyroid support',pills:['Blood-sugar','Hair','Indian staple']}],quinoa:[{name:'Foxtail Millet (Kangni)',why:'Same complete amino acid profile, higher iron, traditionally Indian',pills:['High iron','Gluten-free','Local']},{name:'Ragi (Finger Millet)',why:'Superior calcium + iron, great for hair and thyroid',pills:['Calcium','Iron','Thyroid']}]};
+// ====================== FOOD DATABASE (fact-checked per 100g, special per-piece items) ======================
+// For per-piece items (nuts, fruits etc): cal/p/c/f/fi are PER PIECE not per 100g
+// Use specialUnit:true flag for these
+const FOOD_DB=[
+  // NUTS — per piece values
+  {name:'Almond (soaked, 1 piece)',kw:['almond','badam'],cal:7,p:0.3,c:0.3,f:0.6,fi:0.1,defaultUnit:'piece',isPerPiece:true,defQ:6,note:'~7 kcal per almond'},
+  {name:'Walnut (half, 1 piece)',kw:['walnut','akhrot'],cal:13,p:0.3,c:0.3,f:1.3,fi:0.1,defaultUnit:'piece',isPerPiece:true,defQ:2,note:'~13 kcal per half walnut'},
+  // DAIRY & PROTEIN
+  {name:'Paneer (100g)',kw:['paneer'],cal:265,p:18,c:4,f:20,fi:0,defaultG:80,defaultUnit:'katori'},
+  {name:'Curd / Dahi',kw:['curd','dahi','yoghurt','raita','chanch','buttermilk'],cal:61,p:3.5,c:5,f:3,fi:0,defaultG:150,defaultUnit:'katori'},
+  {name:'Tofu',kw:['tofu'],cal:76,p:8,c:2,f:4,fi:0,defaultG:100,defaultUnit:'katori'},
+  {name:'Egg (boiled)',kw:['egg','anda'],cal:78,p:6,c:1,f:5,fi:0,defaultUnit:'piece',isPerPiece:true,defQ:1,note:'~78 kcal per egg'},
+  // DALS & LEGUMES (cooked, per 150g katori)
+  {name:'Moong Dal (cooked)',kw:['moong dal','moong'],cal:105,p:7,c:18,f:0.4,fi:2,defaultG:150,defaultUnit:'katori'},
+  {name:'Arhar / Toor Dal (cooked)',kw:['arhar','toor dal','yellow dal'],cal:115,p:7,c:20,f:0.4,fi:2.5,defaultG:150,defaultUnit:'katori'},
+  {name:'Mix Dal (cooked)',kw:['mix dal'],cal:110,p:7,c:19,f:0.5,fi:2.5,defaultG:150,defaultUnit:'katori'},
+  {name:'Chana Dal (cooked)',kw:['chana dal'],cal:130,p:7,c:22,f:2,fi:4,defaultG:150,defaultUnit:'katori'},
+  {name:'Rajma (cooked)',kw:['rajma','kidney'],cal:127,p:9,c:23,f:0.5,fi:7,defaultG:150,defaultUnit:'katori'},
+  {name:'Lobhiya (cooked)',kw:['lobhiya','black eyed peas','lobia'],cal:116,p:8,c:21,f:0.5,fi:5,defaultG:150,defaultUnit:'katori'},
+  {name:'Kala Chana (cooked)',kw:['black chana','kala chana','chola','choliya'],cal:160,p:9,c:28,f:2.5,fi:7,defaultG:100,defaultUnit:'katori'},
+  {name:'Sprouts (moong, boiled)',kw:['sprout','moong sprout'],cal:30,p:3,c:6,f:0,fi:2,defaultG:100,defaultUnit:'katori'},
+  // GRAINS & BREADS
+  {name:'Multigrain Phulka',kw:['phulka','multigrain roti','chapati','roti'],cal:104,p:3,c:20,f:1,fi:2,defaultG:35,defaultUnit:'phulka'},
+  {name:'Ragi Cheela (one piece)',kw:['ragi cheela','ragi'],cal:80,p:3,c:15,f:1,fi:2,defaultUnit:'piece',isPerPiece:true,defQ:2,note:'~80 kcal per cheela'},
+  {name:'Besan Cheela (one piece)',kw:['besan cheela','besan'],cal:85,p:5,c:12,f:3,fi:2,defaultUnit:'piece',isPerPiece:true,defQ:2,note:'~85 kcal per cheela'},
+  {name:'Oats Cheela (one piece)',kw:['oats cheela','oats'],cal:75,p:3,c:14,f:2,fi:2,defaultUnit:'piece',isPerPiece:true,defQ:2,note:'~75 kcal per cheela'},
+  {name:'Sabudana Khichdi',kw:['sabudana'],cal:215,p:3,c:48,f:3,fi:1,defaultG:180,defaultUnit:'bowl'},
+  {name:'Vegetable Daliya',kw:['daliya','broken wheat'],cal:142,p:5,c:26,f:3,fi:4,defaultG:200,defaultUnit:'bowl'},
+  {name:'Poha',kw:['poha','flattened rice'],cal:130,p:3,c:28,f:1,fi:2,defaultG:180,defaultUnit:'bowl'},
+  {name:'Vegetable Pulao',kw:['pulao','vegetable rice','rice'],cal:150,p:4,c:30,f:3,fi:2,defaultG:250,defaultUnit:'plate'},
+  {name:'Dal Khichdi',kw:['khichdi','dal khichdi'],cal:150,p:6,c:28,f:3,fi:4,defaultG:250,defaultUnit:'bowl'},
+  {name:'Idli',kw:['idli'],cal:39,p:2,c:8,f:0.5,fi:0.5,defaultUnit:'piece',isPerPiece:true,defQ:4,note:'~39 kcal per idli'},
+  {name:'Dosa',kw:['dosa'],cal:133,p:4,c:24,f:3,fi:1,defaultG:80,defaultUnit:'piece'},
+  {name:'Uthappam / Uttapam',kw:['uthappam','uttapam'],cal:140,p:5,c:25,f:3,fi:2,defaultG:90,defaultUnit:'piece'},
+  {name:'Paratha (1 piece)',kw:['paratha'],cal:210,p:5,c:32,f:8,fi:2,defaultUnit:'piece',isPerPiece:true,defQ:1,note:'~210 kcal per paratha'},
+  {name:'Quinoa (cooked)',kw:['quinoa'],cal:120,p:5,c:21,f:2,fi:3,defaultG:180,defaultUnit:'katori'},
+  // VEGETABLES (cooked)
+  {name:'Bhindi / Okra Sabzi',kw:['bhindi','okra','lady finger'],cal:55,p:2,c:8,f:2,fi:3,defaultG:150,defaultUnit:'katori'},
+  {name:'Gobhi / Cauliflower Sabzi',kw:['gobhi','cauliflower'],cal:70,p:4,c:10,f:2,fi:4,defaultG:150,defaultUnit:'katori'},
+  {name:'Tinda Curry',kw:['tinda'],cal:65,p:2,c:10,f:2,fi:3,defaultG:150,defaultUnit:'katori'},
+  {name:'Matar Paneer',kw:['matar paneer','palak paneer','paneer sabzi'],cal:200,p:12,c:10,f:14,fi:3,defaultG:150,defaultUnit:'katori'},
+  {name:'Kadhi',kw:['kadhi','kadhi pakoda'],cal:90,p:4,c:10,f:4,fi:1,defaultG:200,defaultUnit:'bowl'},
+  {name:'Sambhar',kw:['sambhar'],cal:95,p:5,c:14,f:2,fi:4,defaultG:200,defaultUnit:'bowl'},
+  {name:'Vegetable Soup',kw:['vegetable soup','soup','ghia soup','carrot soup'],cal:55,p:2,c:10,f:1,fi:2,defaultG:250,defaultUnit:'bowl'},
+  {name:'Sweet Corn (boiled)',kw:['sweet corn','corn','maize'],cal:96,p:3,c:21,f:1,fi:2,defaultG:150,defaultUnit:'katori'},
+  {name:'Mushroom',kw:['mushroom'],cal:22,p:3,c:3,f:0,fi:1,defaultG:100,defaultUnit:'katori'},
+  {name:'Sweet Potato (cooked)',kw:['sweet potato','shakarkandi'],cal:86,p:2,c:20,f:0,fi:3,defaultG:150,defaultUnit:'katori'},
+  // BEVERAGES & DRINKS
+  {name:'Chia Seed Drink',kw:['chia seed drink','chia drink','chia'],cal:35,p:1,c:4,f:2,fi:2,defaultG:300,defaultUnit:'glass'},
+  {name:'Sattu Drink',kw:['sattu','sattu drink'],cal:65,p:4,c:12,f:1,fi:2,defaultG:300,defaultUnit:'glass'},
+  {name:'Coconut Water',kw:['coconut water','nariyal pani'],cal:19,p:0,c:4,f:0,fi:1,defaultG:300,defaultUnit:'glass'},
+  {name:'Haldi Milk / Turmeric Latte',kw:['haldi milk','turmeric milk','golden milk'],cal:90,p:4,c:8,f:4,fi:0,defaultG:240,defaultUnit:'cup'},
+  {name:'Almond Milk',kw:['almond milk'],cal:50,p:1,c:4,f:3,fi:1,defaultG:240,defaultUnit:'cup'},
+  {name:'Banana Shake (with milk)',kw:['banana shake','banana milkshake','banana smoothie'],cal:180,p:6,c:32,f:4,fi:2,defaultG:300,defaultUnit:'glass'},
+  {name:'Mango Shake',kw:['mango shake','mango milkshake','aam'],cal:150,p:4,c:28,f:3,fi:1,defaultG:300,defaultUnit:'glass'},
+  {name:'Green Tea',kw:['green tea'],cal:2,p:0,c:0,f:0,fi:0,defaultG:240,defaultUnit:'cup'},
+  {name:'Zeera Tea',kw:['zeera tea','cumin tea'],cal:5,p:0,c:1,f:0,fi:0,defaultG:240,defaultUnit:'cup'},
+  {name:'Methi Dana Water',kw:['methi dana water','methi water','fenugreek water'],cal:8,p:0.4,c:1.5,f:0,fi:0.5,defaultG:300,defaultUnit:'glass'},
+  {name:'Chanch / Buttermilk',kw:['chanch','buttermilk','chaas'],cal:22,p:1,c:3,f:1,fi:0,defaultG:300,defaultUnit:'glass'},
+  // FRUITS (per piece where applicable)
+  {name:'Apple',kw:['apple','seb'],cal:52,p:0.3,c:14,f:0.2,fi:2.4,defaultG:150,defaultUnit:'piece',isPerPiece:true,defQ:1,note:'~78 kcal per medium apple'},
+  {name:'Banana',kw:['banana','kela'],cal:89,p:1,c:23,f:0.3,fi:2.6,defaultUnit:'piece',isPerPiece:true,defQ:1,note:'~89 kcal per medium banana'},
+  {name:'Papaya',kw:['papaya','papita'],cal:43,p:0.5,c:11,f:0.3,fi:1.7,defaultG:150,defaultUnit:'katori'},
+  {name:'Watermelon',kw:['watermelon','tarbooz'],cal:30,p:0.6,c:8,f:0.2,fi:0.4,defaultG:200,defaultUnit:'bowl'},
+  {name:'Pomegranate / Anar',kw:['pomegranate','anar'],cal:83,p:1.7,c:19,f:1.2,fi:4,defaultG:150,defaultUnit:'katori'},
+  {name:'Guava',kw:['guava','amrood'],cal:68,p:2.6,c:14,f:1,fi:5.4,defaultG:150,defaultUnit:'piece',isPerPiece:true,defQ:1},
+  {name:'Pear (nashpati)',kw:['pear','nashpati'],cal:57,p:0.4,c:15,f:0.1,fi:3.1,defaultUnit:'piece',isPerPiece:true,defQ:1},
+  {name:'Strawberry',kw:['strawberry'],cal:32,p:0.7,c:8,f:0.3,fi:2,defaultG:150,defaultUnit:'katori'},
+  {name:'Avocado',kw:['avocado'],cal:160,p:2,c:9,f:15,fi:7,defaultG:80,defaultUnit:'katori'},
+  // SNACKS & LIGHT FOODS
+  {name:'Roasted Makhana',kw:['makhana','fox nut','lotus seeds'],cal:50,p:2,c:11,f:0.1,fi:0.5,defaultG:30,defaultUnit:'katori',note:'~50 kcal per katori (30g)'},
+  {name:'Dhokla',kw:['dhokla'],cal:80,p:3,c:14,f:1.5,fi:1,defaultUnit:'piece',isPerPiece:true,defQ:2,note:'~80 kcal per piece'},
+  {name:'Sprout Tikki / Moong Tikki',kw:['tikki','moong tikki'],cal:85,p:4,c:12,f:3,fi:2,defaultUnit:'piece',isPerPiece:true,defQ:2},
+  {name:'Roasted Makhana (katori)',kw:['roasted makhana'],cal:50,p:2,c:11,f:0.1,fi:0.5,defaultG:30,defaultUnit:'katori'},
+  // SEEDS
+  {name:'Mixed Seeds (tbsp)',kw:['seeds','roasted seeds','pumpkin seeds','sunflower seeds'],cal:55,p:2,c:2,f:4.5,fi:1,defaultG:15,defaultUnit:'tbsp'},
+  {name:'Chia Seeds (tbsp)',kw:['chia seeds'],cal:49,p:1.7,c:4.2,f:3.1,fi:3.9,defaultG:15,defaultUnit:'tbsp'},
+  {name:'Flaxseeds (tbsp)',kw:['flaxseed','alsi'],cal:37,p:1.3,c:2,f:3,fi:1.9,defaultG:10,defaultUnit:'tbsp'},
+];
 
-const STAPLES={flour:['Ragi aata','Oats aata','Chana aata','Multigrain aata','Soy aata','Bajra aata','Besan','Suji / Rava'],nuts:['Almonds (6–10/day)','Walnuts (2/day)','Pumpkin seeds','Sunflower seeds','Chia seeds','Methi dana','Flaxseeds','Anjeer (fig)','Kishmish'],pantry:['Sattu powder','Haldi (turmeric)','Zeera','Sabudana','Makhana','Oats','Ghee (small jar)','Almond milk']};
+const SWAPS={
+  blueberry:[
+    {name:'Jamun (June–Aug)',why:'Same anthocyanins and antioxidants; thyroid-protective, widely available in India',pills:['Anti-inflammatory','Thyroid-safe','Budget-friendly']},
+    {name:'Anar / Pomegranate',why:'Rich in polyphenols; anti-inflammatory, good for Hashimoto\'s, year-round',pills:['Anti-inflammatory','Hair-friendly','Iron-boost']},
+    {name:'Mixed berries (frozen)',why:'Frozen ber or jamun available at better grocery stores, retains all nutrition',pills:['Convenient','Year-round','Same benefits']}
+  ],
+  avocado:[
+    {name:'Ripe banana + 5 walnuts',why:'Similar monounsaturated fat profile; easier to source, digestive-friendly',pills:['Similar fats','Thyroid-safe','Budget']},
+    {name:'Peanut butter (1 tbsp)',why:'Same healthy fat, vitamin E; use homemade on toast or paratha',pills:['Similar fats','Budget','Available']},
+    {name:'Paneer (extra serving)',why:'Adds fat + protein when avocado is unavailable in your area',pills:['High-protein','Local','Thyroid-safe']}
+  ],
+  strawberry:[
+    {name:'Amla (Indian Gooseberry)',why:'3x more Vitamin C than strawberry; thyroid and hair health superstar',pills:['3x Vit-C','Hair growth','Thyroid']},
+    {name:'Guava (Amrood)',why:'Similar Vit C, digestive fibre, year-round and cheap',pills:['High Vit-C','Affordable','Year-round']},
+    {name:'Kiwi',why:'Available Oct–Feb, high in Vit C and selenium',pills:['Vit-C','Selenium','Thyroid']}
+  ],
+  greek:[
+    {name:'Hung curd (chakka dahi)',why:'Strain regular dahi overnight — identical protein; zero extra cost',pills:['Same protein','Homemade','Probiotic']},
+    {name:'Paneer blended into dahi',why:'Blend paneer cubes into dahi for a thick, high-protein base',pills:['High protein','Calcium','Budget']}
+  ],
+  broccoli:[
+    {name:'Palak (Spinach)',why:'Equal iron + folate, readily available, no goitrogen concern when cooked',pills:['Iron-rich','Folate','Year-round']},
+    {name:'Methi leaves',why:'Excellent for blood sugar, hair, and thyroid support',pills:['Blood-sugar','Hair','Indian staple']}
+  ],
+  quinoa:[
+    {name:'Foxtail Millet (Kangni)',why:'Same complete amino acid profile, higher iron, traditionally Indian',pills:['High iron','Gluten-free','Local']},
+    {name:'Ragi (Finger Millet)',why:'Superior calcium + iron, great for hair and thyroid',pills:['Calcium','Iron','Thyroid']}
+  ]
+};
+
+const STAPLES={
+  flour:['Ragi aata','Oats aata','Chana aata','Multigrain aata','Soy aata','Bajra aata','Besan','Suji / Rava'],
+  nuts:['Almonds (soak 6–10 overnight)','Walnuts (2 halves/day)','Pumpkin seeds','Sunflower seeds','Chia seeds','Methi dana','Flaxseeds','Anjeer (fig)','Kishmish'],
+  pantry:['Sattu powder','Haldi (turmeric)','Zeera','Sabudana','Makhana','Oats','Ghee (small jar)','Almond milk (unsweetened)']
+};
 
 const SLOTS=['morning','breakfast','midday','lunch','snack','dinner','postdinner'];
-let currentDay=1,showDismissed=false,slotFilter='all',ingredients=[],pendingFood=null,selectedUnit=null,storage={};
+let currentDay=1, showDismissed=false, slotFilter='all', ingredients=[], pendingFood=null, selectedUnit=null, storage={};
+let pendingMealSlot=null, pendingMealDay=null;
 
-function load(){try{storage=JSON.parse(localStorage.getItem('nourish_v2')||'{}');}catch{storage={};}}
-function save(){try{localStorage.setItem('nourish_v2',JSON.stringify(storage));}catch{}}
+// ====================== STORAGE ======================
+function load(){try{storage=JSON.parse(localStorage.getItem('nourish_v3')||'{}');}catch{storage={};}}
+function save(){try{localStorage.setItem('nourish_v3',JSON.stringify(storage));}catch{}}
 function dayData(d){if(!storage[d])storage[d]={completed:{},dismissed:{},water:0,foods:[],groceryChecked:{}};return storage[d];}
 
+// ====================== INIT ======================
 document.addEventListener('DOMContentLoaded',()=>{
   load();
   const now=new Date();
   document.getElementById('todayDate').textContent=now.toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short'});
   currentDay=((now.getDate()-1)%31)+1;
-  renderDay();renderWater();renderFoodLog();renderGrocery();renderCalGrid();renderMonthlyStats();
+  renderDay();
+  renderWater();
+  renderFoodLog();
+  renderGrocery();
+  renderCalGrid();
+  renderMonthlyStats();
   document.getElementById('waterDayNum').textContent=currentDay;
 });
 
+// ====================== TAB SWITCHING ======================
 function switchTab(id,btn){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById(id).classList.add('active');btn.classList.add('active');
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
   if(id==='tracker'){renderCalGrid();renderMonthlyStats();}
   if(id==='grocery')renderGrocery();
-  if(id==='macros'){renderWater();renderFoodLog();document.getElementById('waterDayNum').textContent=currentDay;}
+  if(id==='macros'){renderWater();renderFoodLog();updateTargetBars();document.getElementById('waterDayNum').textContent=currentDay;}
 }
 
+// ====================== DAY NAVIGATION ======================
+function changeDay(dir){
+  currentDay=Math.max(1,Math.min(31,currentDay+dir));
+  renderDay();
+  renderWater();
+  renderFoodLog();
+  document.getElementById('waterDayNum').textContent=currentDay;
+  updateTargetBars();
+}
+
+// ====================== RENDER DAY ======================
 function renderDay(){
-  const plan=MEAL_PLAN[currentDay-1],data=dayData(currentDay);
+  const plan=MEAL_PLAN[currentDay-1];
+  const data=dayData(currentDay);
   document.getElementById('dayLabel').textContent=`Day ${currentDay} of 31`;
   document.getElementById('dayTitle').textContent=plan.dayName;
-  const total=SLOTS.filter(s=>plan[s]?.length).length,done=SLOTS.filter(s=>data.completed[s]).length,pct=total?Math.round(done/total*100):0;
+  const total=SLOTS.filter(s=>plan[s]?.length).length;
+  const done=SLOTS.filter(s=>data.completed[s]).length;
+  const pct=total?Math.round(done/total*100):0;
   document.getElementById('dayProgressFill').style.width=pct+'%';
-  document.getElementById('dayProgressTxt').textContent=`${done} of ${total} meals done \u00b7 ${pct}%`;
-  const container=document.getElementById('mealSlots');container.innerHTML='';
+  document.getElementById('dayProgressTxt').textContent=`${done} of ${total} meals done`;
+  document.getElementById('dayProgressPct').textContent=pct+'%';
+  const container=document.getElementById('mealSlots');
+  container.innerHTML='';
   SLOTS.forEach(slot=>{
-    const items=plan[slot];if(!items?.length)return;
-    const isDismissed=data.dismissed[slot],isCompleted=data.completed[slot];
+    const items=plan[slot];
+    if(!items?.length)return;
+    const isDismissed=data.dismissed[slot];
+    const isCompleted=data.completed[slot];
     if(isDismissed&&!showDismissed)return;
-    const meta=SLOT_META[slot],macEst=SLOT_MACRO_EST[slot],div=document.createElement('div');
-    div.className=`meal-slot${isCompleted?' completed':''}${isDismissed?' dismissed':''}`;
+    const meta=SLOT_META[slot];
+    const mac=SLOT_MACRO_EST[slot];
     const swapKey=detectSwapKey(items);
-    div.innerHTML=`<div class="slot-header"><div class="slot-meta"><span class="slot-icon">${meta.icon}</span><span class="slot-name">${meta.label}</span><span class="slot-time-chip">${meta.time}</span></div><div class="slot-actions"><button class="action-btn ${isCompleted?'btn-check-on':'btn-check-off'}" onclick="toggleComplete(${currentDay},'${slot}')">&#x2713;</button>${swapKey?`<button class="action-btn btn-swap" onclick="openSwap('${slot}','${swapKey}')">&#x21C4;</button>`:''}<button class="action-btn ${isDismissed?'btn-dismiss-on':'btn-dismiss-off'}" onclick="toggleDismiss(${currentDay},'${slot}')">&#x2715;</button></div></div><div class="slot-items">${items.map(item=>{const isAlt=/^alt:/i.test(item),txt=isAlt?'\u21AA '+item.replace(/^alt:\s*/i,''):item;return`<div class="slot-item${isAlt?' alt':''}"><span class="slot-item-dot">${isAlt?'\u25e6':'\u2022'}</span><span class="slot-item-text">${txt}</span></div>`;}).join('')}</div><div class="macros-pill"><span class="mpill">~${macEst.cal} kcal</span><span class="mpill">${macEst.p}g protein</span><span class="mpill">${macEst.c}g carbs</span><span class="mpill">${macEst.f}g fat</span></div><div class="dismissed-note">\u26a0 Dismissed \u2014 missing ingredients</div>`;
+    const div=document.createElement('div');
+    div.className=`meal-slot${isCompleted?' completed':''}${isDismissed?' dismissed':''}`;
+    div.innerHTML=`
+      <div class="slot-top">
+        <div class="slot-meta">
+          <div class="slot-icon-wrap">${meta.icon}</div>
+          <div class="slot-info">
+            <div class="slot-name">${meta.label}</div>
+            <div class="slot-time-chip">${meta.time}</div>
+          </div>
+        </div>
+        <div class="slot-actions">
+          <button class="action-btn ${isCompleted?'btn-check-on':'btn-check-off'}" onclick="onMealTick(${currentDay},'${slot}')">${isCompleted?'✓ Eaten':'✓ Eat'}</button>
+          ${swapKey?`<button class="action-btn btn-swap" onclick="openSwap('${slot}','${swapKey}')" title="Swap ingredient">⇄</button>`:''}
+          <button class="action-btn ${isDismissed?'btn-dismiss-on':'btn-dismiss-off'}" onclick="toggleDismiss(${currentDay},'${slot}')" title="${isDismissed?'Restore':'Dismiss'}">✕</button>
+        </div>
+      </div>
+      <div class="slot-body">
+        <div class="slot-items">${items.map(item=>{
+          const isAlt=/^alt:/i.test(item);
+          const txt=isAlt?'↪ '+item.replace(/^alt:\s*/i,''):item;
+          return`<div class="slot-item${isAlt?' alt':''}"><span class="slot-item-dot">•</span><span class="slot-item-text">${txt}</span></div>`;
+        }).join('')}</div>
+        <div class="macros-pill">
+          <span class="mpill">~${mac.cal} kcal</span>
+          <span class="mpill">${mac.p}g protein</span>
+          <span class="mpill">${mac.c}g carbs</span>
+          <span class="mpill">${mac.f}g fat</span>
+        </div>
+        <div class="dismissed-note">⚠ Dismissed — missing ingredients</div>
+      </div>`;
     container.appendChild(div);
   });
 }
@@ -529,130 +942,508 @@ function detectSwapKey(items){
   return null;
 }
 
-function changeDay(dir){currentDay=Math.max(1,Math.min(31,currentDay+dir));renderDay();renderWater();renderFoodLog();document.getElementById('waterDayNum').textContent=currentDay;}
-function toggleComplete(day,slot){const d=dayData(day);d.completed[slot]=!d.completed[slot];save();renderDay();showToast(d.completed[slot]?'✓ Meal marked eaten!':'Meal unmarked');}
-function toggleDismiss(day,slot){const d=dayData(day);d.dismissed[slot]=!d.dismissed[slot];save();renderDay();showToast(d.dismissed[slot]?'✕ Dismissed — no ingredients':'↩ Meal restored');}
-function toggleShowDismissed(){showDismissed=!showDismissed;document.getElementById('dismissToggle').className='toggle'+(showDismissed?' on':'');renderDay();}
+// ====================== MEAL TICK -> LOG MODAL ======================
+function onMealTick(day,slot){
+  const d=dayData(day);
+  if(d.completed[slot]){
+    // Already done — untick
+    d.completed[slot]=false;
+    // Remove any logged foods for this slot
+    d.foods=(d.foods||[]).filter(f=>f.fromSlot!==slot);
+    save();
+    renderDay();
+    renderFoodLog();
+    updateTargetBars();
+    showToast('Meal unmarked');
+    return;
+  }
+  // Open meal log modal
+  pendingMealSlot=slot;
+  pendingMealDay=day;
+  const plan=MEAL_PLAN[day-1];
+  const meta=SLOT_META[slot];
+  document.getElementById('mlSlotName').textContent=meta.label;
+  document.getElementById('mlSlotTitle').textContent=meta.time+' · Log what you ate';
+  const items=(plan[slot]||[]).filter(i=>!/^alt:/i.test(i));
+  const rows=items.map((item,idx)=>{
+    const foodMatch=matchFoodItem(item);
+    const unitLabel=foodMatch?foodMatch.defaultUnit:'serving';
+    return`<div class="ml-item-row" id="mlrow-${idx}" data-food-idx="${foodMatch?FOOD_DB.indexOf(foodMatch):-1}" data-item="${escHtml(item)}">
+      <div class="ml-item-name">${item}</div>
+      <input class="ml-item-qty" type="number" value="${foodMatch&&foodMatch.isPerPiece?foodMatch.defQ:1}" min="0" step="0.5" oninput="updateMlPreview()">
+      <span class="ml-item-unit">${unitLabel}</span>
+    </div>`;
+  }).join('');
+  document.getElementById('mlItemRows').innerHTML=rows||`<div style="font-size:0.8rem;color:var(--text3);padding:8px 0">Tap "Mark Eaten" to log with estimated macros</div>`;
+  document.getElementById('mlPreview').classList.remove('show');
+  updateMlPreview();
+  document.getElementById('mealLogModal').classList.add('open');
+}
 
+function matchFoodItem(itemText){
+  const t=itemText.toLowerCase();
+  let best=null, bestScore=0;
+  FOOD_DB.forEach(f=>{
+    let score=0;
+    f.kw.forEach(k=>{if(t.includes(k))score+=k.length;});
+    if(score>bestScore){bestScore=score;best=f;}
+  });
+  return bestScore>2?best:null;
+}
+
+function updateMlPreview(){
+  const rows=document.querySelectorAll('[id^="mlrow-"]');
+  let totCal=0,totP=0,totC=0,totF=0,totFi=0;
+  rows.forEach(row=>{
+    const idx=parseInt(row.dataset.foodIdx);
+    const qty=parseFloat(row.querySelector('input').value)||0;
+    if(idx>=0&&qty>0){
+      const food=FOOD_DB[idx];
+      let cal,p,c,f,fi;
+      if(food.isPerPiece){
+        cal=food.cal*qty;p=food.p*qty;c=food.c*qty;f=food.f*qty;fi=food.fi*qty;
+      } else {
+        const g=(food.defaultG||150)*qty;
+        cal=food.cal*g/100;p=food.p*g/100;c=food.c*g/100;f=food.f*g/100;fi=food.fi*g/100;
+      }
+      totCal+=cal;totP+=p;totC+=c;totF+=f;totFi+=fi;
+    }
+  });
+  if(totCal>0){
+    document.getElementById('mlCal').textContent=Math.round(totCal);
+    document.getElementById('mlProt').textContent=Math.round(totP*10)/10+'g';
+    document.getElementById('mlCarb').textContent=Math.round(totC*10)/10+'g';
+    document.getElementById('mlFat').textContent=Math.round(totF*10)/10+'g';
+    document.getElementById('mlFib').textContent=Math.round(totFi*10)/10+'g';
+    document.getElementById('mlPreview').classList.add('show');
+  } else {
+    document.getElementById('mlPreview').classList.remove('show');
+  }
+}
+
+function confirmMealLog(){
+  if(!pendingMealSlot)return;
+  const d=dayData(pendingMealDay);
+  // Remove previous entries for this slot
+  d.foods=(d.foods||[]).filter(f=>f.fromSlot!==pendingMealSlot);
+  const rows=document.querySelectorAll('[id^="mlrow-"]');
+  let loggedAny=false;
+  rows.forEach(row=>{
+    const idx=parseInt(row.dataset.foodIdx);
+    const qty=parseFloat(row.querySelector('input').value)||0;
+    const itemName=row.dataset.item;
+    if(qty<=0)return;
+    let cal,p,c,f,fi,grams;
+    if(idx>=0){
+      const food=FOOD_DB[idx];
+      if(food.isPerPiece){
+        cal=food.cal*qty;p=food.p*qty;c=food.c*qty;f=food.f*qty;fi=food.fi*qty;grams=qty;
+      } else {
+        grams=(food.defaultG||150)*qty;
+        cal=food.cal*grams/100;p=food.p*grams/100;c=food.c*grams/100;f=food.f*grams/100;fi=food.fi*grams/100;
+      }
+    } else {
+      // Unmatched — use slot estimate divided by items
+      const mac=SLOT_MACRO_EST[pendingMealSlot];
+      const n=rows.length||1;
+      cal=mac.cal/n;p=mac.p/n;c=mac.c/n;f=mac.f/n;fi=mac.fi/n;grams=100;
+    }
+    d.foods.push({
+      name:itemName,qty,unit:'serving',grams:Math.round(grams),
+      cal:Math.round(cal),p:Math.round(p*10)/10,c:Math.round(c*10)/10,
+      f:Math.round(f*10)/10,fi:Math.round(fi*10)/10,
+      id:Date.now()+Math.random(),fromSlot:pendingMealSlot
+    });
+    loggedAny=true;
+  });
+  // If nothing logged from items, use slot estimate
+  if(!loggedAny){
+    const mac=SLOT_MACRO_EST[pendingMealSlot];
+    d.foods.push({name:SLOT_META[pendingMealSlot].label+' (estimated)',qty:1,unit:'meal',grams:300,
+      cal:mac.cal,p:mac.p,c:mac.c,f:mac.f,fi:mac.fi,id:Date.now(),fromSlot:pendingMealSlot});
+  }
+  d.completed[pendingMealSlot]=true;
+  save();
+  closeMealLog();
+  renderDay();
+  renderFoodLog();
+  updateTargetBars();
+  showToast('✓ Meal logged + macros saved!');
+}
+
+function closeMealLog(){
+  document.getElementById('mealLogModal').classList.remove('open');
+  pendingMealSlot=null;pendingMealDay=null;
+}
+
+function toggleDismiss(day,slot){
+  const d=dayData(day);
+  d.dismissed[slot]=!d.dismissed[slot];
+  save();renderDay();
+  showToast(d.dismissed[slot]?'✕ Dismissed':'↩ Meal restored');
+}
+
+function toggleShowDismissed(){
+  showDismissed=!showDismissed;
+  document.getElementById('dismissToggle').className='toggle'+(showDismissed?' on':'');
+  renderDay();
+}
+
+// ====================== SWAP MODAL ======================
 function openSwap(slot,key){
-  const opts=SWAPS[key]||[],meta=SLOT_META[slot];
+  const opts=SWAPS[key]||[];
+  const meta=SLOT_META[slot];
   document.getElementById('swapTitle').textContent=`Swap for ${meta.label}`;
-  document.getElementById('swapOptions').innerHTML=opts.map((o,i)=>`<div class="swap-card" onclick="closeSwap();showToast('Noted: use ${o.name.replace(/'/g,"\\'")}')"><div class="swap-card-name">${o.name}</div><div class="swap-card-why">${o.why}</div><div class="swap-card-pills">${o.pills.map(p=>`<span class="swap-pill">${p}</span>`).join('')}</div></div>`).join('')||'<div style="color:var(--text3);font-size:0.82rem;padding:10px 0">No swaps available</div>';
+  document.getElementById('swapOptions').innerHTML=opts.map(o=>`<div class="swap-card" onclick="closeSwap();showToast('Noted: use ${o.name.replace(/'/g,"\\'")}')">\
+    <div class="swap-card-name">${o.name}</div>\
+    <div class="swap-card-why">${o.why}</div>\
+    <div class="swap-card-pills">${o.pills.map(p=>`<span class="swap-pill">${p}</span>`).join('')}</div>\
+  </div>`).join('')||'<div style="color:var(--text3);font-size:0.82rem;padding:10px 0">No swaps available</div>';
   document.getElementById('swapModal').classList.add('open');
 }
 function closeSwap(){document.getElementById('swapModal').classList.remove('open');}
 
+// ====================== FOOD SEARCH (MANUAL LOG) ======================
 function onFoodInput(){
-  const q=document.getElementById('foodSearchInput').value.trim().toLowerCase(),sugg=document.getElementById('foodSuggestions');
+  const q=document.getElementById('foodSearchInput').value.trim().toLowerCase();
+  const sugg=document.getElementById('foodSuggestions');
   if(q.length<2){sugg.classList.remove('open');return;}
-  const matches=FOOD_DB.filter(f=>f.name.toLowerCase().includes(q)||f.kw.some(k=>k.includes(q))).slice(0,6);
+  const matches=FOOD_DB.filter(f=>f.name.toLowerCase().includes(q)||f.kw.some(k=>k.includes(q))).slice(0,7);
   if(!matches.length){sugg.classList.remove('open');return;}
-  sugg.innerHTML=matches.map(f=>`<div class="food-sugg-item" onclick="openQtyModal(${FOOD_DB.indexOf(f)})"><div><div class="food-sugg-name">${f.name}</div><div class="food-sugg-meta">${f.defaultG}g per ${f.defaultUnit}</div></div><div class="food-sugg-cal">${Math.round(f.cal*f.defaultG/100)} kcal</div></div>`).join('');
+  sugg.innerHTML=matches.map(f=>{
+    let kcalPreview;
+    if(f.isPerPiece){
+      kcalPreview=`${Math.round(f.cal*(f.defQ||1))} kcal / ${f.defQ||1} pc`;
+    } else {
+      kcalPreview=`${Math.round(f.cal*(f.defaultG||100)/100)} kcal / ${f.defaultUnit||'serving'}`;
+    }
+    return`<div class="food-sugg-item" onclick="openQtyModal(${FOOD_DB.indexOf(f)})">
+      <div>
+        <div class="food-sugg-name">${f.name}</div>
+        <div class="food-sugg-meta">${f.note||''}</div>
+      </div>
+      <div class="food-sugg-cal">${kcalPreview}</div>
+    </div>`;
+  }).join('');
   sugg.classList.add('open');
 }
-function pickFirstFood(){const q=document.getElementById('foodSearchInput').value.trim().toLowerCase();if(!q)return;const m=FOOD_DB.find(f=>f.name.toLowerCase().includes(q)||f.kw.some(k=>k.includes(q)));if(m)openQtyModal(FOOD_DB.indexOf(m));}
+
+function pickFirstFood(){
+  const q=document.getElementById('foodSearchInput').value.trim().toLowerCase();
+  if(!q)return;
+  const m=FOOD_DB.find(f=>f.name.toLowerCase().includes(q)||f.kw.some(k=>k.includes(q)));
+  if(m)openQtyModal(FOOD_DB.indexOf(m));
+}
 
 function openQtyModal(idx){
   pendingFood=FOOD_DB[idx];
   document.getElementById('qtyTitle').textContent=`How much ${pendingFood.name}?`;
-  document.getElementById('qtyInput').value=1;
-  selectedUnit=UNITS.find(u=>u.id===pendingFood.defaultUnit)||UNITS[0];
-  const relevant=['katori','bowl','cup','glass','phulka','roti','piece','tbsp','gram'];
-  document.getElementById('unitGrid').innerHTML=UNITS.filter(u=>relevant.includes(u.id)).map(u=>`<button class="unit-btn${u.id===selectedUnit.id?' selected':''}" onclick="selectUnit('${u.id}',this)">${u.label}</button>`).join('');
+  if(pendingFood.isPerPiece){
+    document.getElementById('qtyInput').value=pendingFood.defQ||1;
+    document.getElementById('unitGrid').innerHTML=`<div style="grid-column:1/-1;padding:8px 0;font-size:0.78rem;color:var(--text3)">${pendingFood.note||'Enter number of pieces'}</div>`;
+    selectedUnit={id:'piece',label:'pieces',g:1};
+  } else {
+    document.getElementById('qtyInput').value=1;
+    const relevant=['katori','bowl','cup','glass','plate','phulka','roti','piece','tbsp','gram'];
+    selectedUnit=UNITS.find(u=>u.id===pendingFood.defaultUnit)||UNITS[0];
+    document.getElementById('unitGrid').innerHTML=UNITS.filter(u=>relevant.includes(u.id)).map(u=>`<button class="unit-btn${u.id===selectedUnit.id?' selected':''}" onclick="selectUnit('${u.id}',this)">${u.label}</button>`).join('');
+  }
   updateQtyPreview();
   document.getElementById('qtyModal').classList.add('open');
 }
-function selectUnit(id,btn){selectedUnit=UNITS.find(u=>u.id===id);document.querySelectorAll('.unit-btn').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');updateQtyPreview();}
+
+function selectUnit(id,btn){
+  selectedUnit=UNITS.find(u=>u.id===id);
+  document.querySelectorAll('.unit-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  updateQtyPreview();
+}
+
 function updateQtyPreview(){
   if(!pendingFood||!selectedUnit)return;
-  const qty=parseFloat(document.getElementById('qtyInput').value)||1,grams=selectedUnit.g*qty;
-  const cal=Math.round(pendingFood.cal*grams/100),p=Math.round(pendingFood.p*grams/100*10)/10,c=Math.round(pendingFood.c*grams/100*10)/10,f=Math.round(pendingFood.f*grams/100*10)/10,fi=Math.round(pendingFood.fi*grams/100*10)/10;
-  document.getElementById('qtyPreview').innerHTML=`<div class="qty-prev-item"><div class="qty-prev-val">${cal}</div><div class="qty-prev-unit">kcal</div></div><div class="qty-prev-item"><div class="qty-prev-val">${p}g</div><div class="qty-prev-unit">Protein</div></div><div class="qty-prev-item"><div class="qty-prev-val">${c}g</div><div class="qty-prev-unit">Carbs</div></div><div class="qty-prev-item"><div class="qty-prev-val">${f}g</div><div class="qty-prev-unit">Fat</div></div><div class="qty-prev-item"><div class="qty-prev-val">${fi}g</div><div class="qty-prev-unit">Fiber</div></div>`;
+  const qty=parseFloat(document.getElementById('qtyInput').value)||1;
+  let cal,p,c,f,fi;
+  if(pendingFood.isPerPiece){
+    cal=pendingFood.cal*qty;p=pendingFood.p*qty;c=pendingFood.c*qty;f=pendingFood.f*qty;fi=pendingFood.fi*qty;
+  } else {
+    const grams=selectedUnit.g*qty;
+    cal=pendingFood.cal*grams/100;p=pendingFood.p*grams/100;c=pendingFood.c*grams/100;f=pendingFood.f*grams/100;fi=pendingFood.fi*grams/100;
+  }
+  document.getElementById('qtyPreview').innerHTML=`
+    <div class="qty-prev-item"><div class="qty-prev-val">${Math.round(cal)}</div><div class="qty-prev-unit">kcal</div></div>
+    <div class="qty-prev-item"><div class="qty-prev-val">${Math.round(p*10)/10}g</div><div class="qty-prev-unit">Protein</div></div>
+    <div class="qty-prev-item"><div class="qty-prev-val">${Math.round(c*10)/10}g</div><div class="qty-prev-unit">Carbs</div></div>
+    <div class="qty-prev-item"><div class="qty-prev-val">${Math.round(f*10)/10}g</div><div class="qty-prev-unit">Fat</div></div>
+    <div class="qty-prev-item"><div class="qty-prev-val">${Math.round(fi*10)/10}g</div><div class="qty-prev-unit">Fiber</div></div>`;
 }
+
 function confirmQty(){
   if(!pendingFood||!selectedUnit)return;
-  const qty=parseFloat(document.getElementById('qtyInput').value)||1,grams=selectedUnit.g*qty;
-  const entry={name:pendingFood.name,qty,unit:selectedUnit.label,grams,cal:Math.round(pendingFood.cal*grams/100),p:Math.round(pendingFood.p*grams/100*10)/10,c:Math.round(pendingFood.c*grams/100*10)/10,f:Math.round(pendingFood.f*grams/100*10)/10,fi:Math.round(pendingFood.fi*grams/100*10)/10,id:Date.now()};
-  const d=dayData(currentDay);if(!d.foods)d.foods=[];d.foods.push(entry);save();closeQty();
-  document.getElementById('foodSearchInput').value='';document.getElementById('foodSuggestions').classList.remove('open');
-  renderFoodLog();showToast(`+ ${entry.name} \u00b7 ${entry.cal} kcal`);
+  const qty=parseFloat(document.getElementById('qtyInput').value)||1;
+  let grams,cal,p,c,f,fi;
+  if(pendingFood.isPerPiece){
+    grams=qty;cal=pendingFood.cal*qty;p=pendingFood.p*qty;c=pendingFood.c*qty;f=pendingFood.f*qty;fi=pendingFood.fi*qty;
+  } else {
+    grams=selectedUnit.g*qty;
+    cal=pendingFood.cal*grams/100;p=pendingFood.p*grams/100;c=pendingFood.c*grams/100;f=pendingFood.f*grams/100;fi=pendingFood.fi*grams/100;
+  }
+  const entry={name:pendingFood.name,qty,unit:selectedUnit.label,grams:Math.round(grams),
+    cal:Math.round(cal),p:Math.round(p*10)/10,c:Math.round(c*10)/10,f:Math.round(f*10)/10,fi:Math.round(fi*10)/10,
+    id:Date.now()};
+  const d=dayData(currentDay);
+  if(!d.foods)d.foods=[];
+  d.foods.push(entry);
+  save();closeQty();
+  document.getElementById('foodSearchInput').value='';
+  document.getElementById('foodSuggestions').classList.remove('open');
+  renderFoodLog();updateTargetBars();
+  showToast(`+ ${entry.name} · ${entry.cal} kcal`);
 }
 function closeQty(){document.getElementById('qtyModal').classList.remove('open');}
-function deleteFood(id){const d=dayData(currentDay);d.foods=(d.foods||[]).filter(f=>f.id!==id);save();renderFoodLog();}
+function deleteFood(id){
+  const d=dayData(currentDay);
+  d.foods=(d.foods||[]).filter(f=>f.id!==id);
+  save();renderFoodLog();updateTargetBars();
+}
 
 function renderFoodLog(){
-  const d=dayData(currentDay),foods=d.foods||[];
+  const d=dayData(currentDay);
+  const foods=d.foods||[];
   const container=document.getElementById('loggedItems');
-  if(!foods.length){container.innerHTML='<div style="font-size:0.78rem;color:var(--text3);padding:8px 0;text-align:center">Nothing logged yet \u2014 search above</div>';updateTotals(0,0,0,0,0);return;}
-  container.innerHTML=foods.map(f=>`<div class="logged-item"><div><div class="li-name">${f.name}</div><div class="li-qty">${f.qty} \u00d7 ${f.unit} \u00b7 ${Math.round(f.grams)}g \u00b7 P:${f.p}g C:${f.c}g F:${f.f}g</div></div><div class="li-right"><span class="li-cal">${f.cal} kcal</span><button class="li-delete" onclick="deleteFood(${f.id})">\u2715</button></div></div>`).join('');
-  updateTotals(foods.reduce((a,f)=>a+f.cal,0),foods.reduce((a,f)=>a+f.p,0),foods.reduce((a,f)=>a+f.c,0),foods.reduce((a,f)=>a+f.f,0),foods.reduce((a,f)=>a+f.fi,0));
+  if(!foods.length){
+    container.innerHTML='<div style="font-size:0.78rem;color:var(--text3);padding:10px 0;text-align:center">Nothing logged yet — tick meals above or search below</div>';
+    updateTotals(0,0,0,0,0);return;
+  }
+  container.innerHTML=foods.map(f=>`<div class="logged-item">
+    <div>
+      <div class="li-name">${f.name}</div>
+      <div class="li-qty">${f.qty} × ${f.unit}${f.grams&&!f.fromSlot?' · '+Math.round(f.grams)+'g':''} · P:${f.p}g C:${f.c}g F:${f.f}g</div>
+    </div>
+    <div class="li-right"><span class="li-cal">${f.cal} kcal</span><button class="li-delete" onclick="deleteFood(${f.id})">✕</button></div>
+  </div>`).join('');
+  updateTotals(
+    foods.reduce((a,f)=>a+f.cal,0),
+    foods.reduce((a,f)=>a+f.p,0),
+    foods.reduce((a,f)=>a+f.c,0),
+    foods.reduce((a,f)=>a+f.f,0),
+    foods.reduce((a,f)=>a+f.fi,0)
+  );
 }
+
 function updateTotals(cal,p,c,f,fi){
+  // Targets: cal 1400 mid, prot 82g, carb 135g, fat 47g
+  const target=1400;
   document.getElementById('totalCal').textContent=cal?`${Math.round(cal)} kcal`:'— kcal';
   document.getElementById('totalProt').textContent=p?`${Math.round(p*10)/10}g`:'—g';
   document.getElementById('totalCarb').textContent=c?`${Math.round(c*10)/10}g`:'—g';
   document.getElementById('totalFat').textContent=f?`${Math.round(f*10)/10}g`:'—g';
   document.getElementById('totalFib').textContent=fi?`${Math.round(fi*10)/10}g`:'—g';
-  document.getElementById('calBar').style.width=Math.min(100,Math.round(cal/1500*100))+'%';
+  document.getElementById('calBar').style.width=Math.min(100,Math.round(cal/target*100))+'%';
+  const remain=target-Math.round(cal);
+  const re=document.getElementById('calRemain');
+  if(re)re.textContent=cal>0?(remain>0?`${remain} kcal remaining`:'Over target by '+Math.abs(remain)+' kcal'):'';
 }
 
+function updateTargetBars(){
+  const d=dayData(currentDay);
+  const foods=d.foods||[];
+  const totCal=foods.reduce((a,f)=>a+f.cal,0);
+  const totP=foods.reduce((a,f)=>a+f.p,0);
+  const totC=foods.reduce((a,f)=>a+f.c,0);
+  const totF=foods.reduce((a,f)=>a+f.f,0);
+  const el=(id,pct)=>{const e=document.getElementById(id);if(e)e.style.width=Math.min(100,pct)+'%';};
+  el('tbar-cal',totCal/1400*100);
+  el('tbar-prot',totP/82*100);
+  el('tbar-carb',totC/135*100);
+  el('tbar-fat',totF/47*100);
+}
+
+// ====================== WATER ======================
 function renderWater(){
-  const d=dayData(currentDay),g=d.water||0,container=document.getElementById('waterGlasses');
+  const d=dayData(currentDay),g=d.water||0;
+  const container=document.getElementById('waterGlasses');
   container.innerHTML='';
-  for(let i=0;i<10;i++){const btn=document.createElement('button');btn.className='glass-btn'+(i<g?' filled':'');btn.onclick=()=>setWater(i<g?i:i+1);container.appendChild(btn);}
+  for(let i=0;i<10;i++){
+    const btn=document.createElement('button');
+    btn.className='glass-btn'+(i<g?' filled':'');
+    btn.onclick=()=>setWater(i<g?i:i+1);
+    container.appendChild(btn);
+  }
   document.getElementById('waterCount').textContent=g;
 }
-function setWater(n){dayData(currentDay).water=n;save();renderWater();showToast(`\uD83D\uDCA7 ${n} glass${n!==1?'es':''} logged`);}
+function setWater(n){dayData(currentDay).water=n;save();renderWater();showToast(`💧 ${n} glass${n!==1?'es':''} logged`);}
 
-function setSlotFilter(slot,btn){slotFilter=slot;document.querySelectorAll('.filter-chip').forEach(b=>b.classList.remove('active'));btn.classList.add('active');searchMeals();}
-function addIngredient(){const inp=document.getElementById('ingSearch'),val=inp.value.trim().toLowerCase();if(!val||ingredients.includes(val)){inp.value='';return;}ingredients.push(val);inp.value='';renderIngTags();searchMeals();}
-function removeIngredient(ing){ingredients=ingredients.filter(i=>i!==ing);renderIngTags();searchMeals();}
-function renderIngTags(){document.getElementById('ingTags').innerHTML=ingredients.map(i=>`<span class="tag">${i} <span class="remove" onclick="removeIngredient('${i}')">\u00d7</span></span>`).join('');}
+// ====================== FIND MEALS ======================
+function setSlotFilter(slot,btn){
+  slotFilter=slot;
+  document.querySelectorAll('.filter-chip').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  searchMeals();
+}
+function addIngredient(){
+  const inp=document.getElementById('ingSearch');
+  const val=inp.value.trim().toLowerCase();
+  if(!val||ingredients.includes(val)){inp.value='';return;}
+  ingredients.push(val);
+  inp.value='';
+  renderIngTags();
+  searchMeals();
+}
+function removeIngredient(ing){
+  ingredients=ingredients.filter(i=>i!==ing);
+  renderIngTags();
+  searchMeals();
+}
+function renderIngTags(){
+  document.getElementById('ingTags').innerHTML=ingredients.map(i=>`<span class="tag">${i} <span class="remove" onclick="removeIngredient('${i}')">×</span></span>`).join('');
+}
 function searchMeals(){
   const container=document.getElementById('searchResults');
-  if(!ingredients.length){container.innerHTML='<div class="empty-state"><div class="empty-icon">\uD83D\uDD0D</div><div class="empty-txt">Add ingredients to find matching meals across all 31 days</div></div>';return;}
-  const filterSlots=slotFilter==='all'?SLOTS:[slotFilter],results=[];
+  if(!ingredients.length){
+    container.innerHTML='<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-txt">Add ingredients to find matching meals across all 31 days</div></div>';
+    return;
+  }
+  const filterSlots=slotFilter==='all'?SLOTS:[slotFilter];
+  const results=[];
   MEAL_PLAN.forEach(plan=>{
     const grouped={};
-    filterSlots.forEach(slot=>{const items=plan[slot]||[],matched=items.filter(item=>ingredients.some(ing=>item.toLowerCase().includes(ing)));if(matched.length)grouped[slot]=matched;});
+    filterSlots.forEach(slot=>{
+      const items=plan[slot]||[];
+      const matched=items.filter(item=>ingredients.some(ing=>item.toLowerCase().includes(ing)));
+      if(matched.length)grouped[slot]=matched;
+    });
     if(Object.keys(grouped).length)results.push({plan,grouped});
   });
-  if(!results.length){container.innerHTML=`<div class="empty-state"><div class="empty-icon">\uD83D\uDE14</div><div class="empty-txt">No meals found with: ${ingredients.join(', ')}${slotFilter!=='all'?' at '+SLOT_META[slotFilter]?.label:''}</div></div>`;return;}
-  container.innerHTML=results.map(r=>`<div class="result-card"><div class="result-card-head"><span class="result-day-label">Day ${r.plan.day} \u2014 ${r.plan.dayName}</span><span class="result-day-sub">${Object.keys(r.grouped).length} match${Object.keys(r.grouped).length>1?'es':''}</span></div>${Object.entries(r.grouped).map(([slot,items])=>`<div class="result-slot-group"><div class="result-slot-name">${SLOT_META[slot].icon} ${SLOT_META[slot].label}</div>${items.map(i=>`<div class="result-item">${i}</div>`).join('')}</div>`).join('')}</div>`).join('');
+  if(!results.length){
+    container.innerHTML=`<div class="empty-state"><div class="empty-icon">😕</div><div class="empty-txt">No meals found with: ${ingredients.join(', ')}${slotFilter!=='all'?' at '+SLOT_META[slotFilter]?.label:''}</div></div>`;
+    return;
+  }
+  container.innerHTML=results.map(r=>`<div class="result-card">
+    <div class="result-card-head">
+      <span class="result-day-label">Day ${r.plan.day} — ${r.plan.dayName}</span>
+      <span class="result-day-sub">${Object.keys(r.grouped).length} match${Object.keys(r.grouped).length>1?'es':''}</span>
+    </div>
+    ${Object.entries(r.grouped).map(([slot,items])=>`<div class="result-slot-group">
+      <div class="result-slot-name">${SLOT_META[slot].icon} ${SLOT_META[slot].label}</div>
+      ${items.map(i=>`<div class="result-item">${i}</div>`).join('')}
+    </div>`).join('')}
+  </div>`).join('');
 }
 
+// ====================== GROCERY ======================
 function renderGrocery(){
-  const nextDay=(currentDay%31)+1,plan=MEAL_PLAN[nextDay-1],d=dayData(currentDay),checked=d.groceryChecked||{};
+  const nextDay=(currentDay%31)+1;
+  const plan=MEAL_PLAN[nextDay-1];
+  const d=dayData(currentDay);
+  const checked=d.groceryChecked||{};
   const allItems=new Set();
-  SLOTS.forEach(slot=>(plan[slot]||[]).forEach(item=>{const cleaned=item.replace(/^alt:\s*/i,'').trim();if(cleaned.length>2)cleaned.split(/[+,]/).forEach(part=>{const p=part.trim();if(p.length>2)allItems.add(p);});}));
+  SLOTS.forEach(slot=>(plan[slot]||[]).forEach(item=>{
+    const cleaned=item.replace(/^alt:\s*/i,'').trim();
+    if(cleaned.length>2)cleaned.split(/[+,]/).forEach(part=>{const p=part.trim();if(p.length>2)allItems.add(p);});
+  }));
   const itemsArr=[...allItems].slice(0,20);
-  document.getElementById('groceryContent').innerHTML=`<div style="font-size:0.72rem;color:var(--text3);margin-bottom:10px;font-weight:600">For Day ${nextDay} \u2014 ${plan.dayName}</div>${itemsArr.map((item,i)=>{const key='g_'+i,isChecked=checked[key];return`<div class="grocery-item"><div class="grocery-check${isChecked?' checked':''}" onclick="toggleGrocery('${key}',this)">${isChecked?'&#x2713;':''}</div><span class="grocery-item-name${isChecked?' checked-text':''}">${item}</span></div>`;}).join('')}`;
-  ['flour','nuts','pantry'].forEach(cat=>{const el=document.getElementById('staples'+cat.charAt(0).toUpperCase()+cat.slice(1));if(!el)return;el.innerHTML=STAPLES[cat].map((item,i)=>{const key=`staple_${cat}_${i}`,isChecked=(storage['staples']||{})[key];return`<div class="grocery-item"><div class="grocery-check${isChecked?' checked':''}" onclick="toggleStaple('${key}',this)">${isChecked?'&#x2713;':''}</div><span class="grocery-item-name${isChecked?' checked-text':''}">${item}</span></div>`;}).join('');});
+  document.getElementById('groceryContent').innerHTML=`<div style="font-size:0.7rem;color:var(--text3);margin-bottom:10px;font-weight:600">For Day ${nextDay} — ${plan.dayName}</div>`+
+    itemsArr.map((item,i)=>{
+      const key='g_'+i,isChecked=checked[key];
+      return`<div class="grocery-item">
+        <div class="grocery-check${isChecked?' checked':''}" onclick="toggleGrocery('${key}',this)">${isChecked?'✓':''}</div>
+        <span class="grocery-item-name${isChecked?' checked-text':''}">${item}</span>
+      </div>`;
+    }).join('');
+  ['flour','nuts','pantry'].forEach(cat=>{
+    const el=document.getElementById('staples'+cat.charAt(0).toUpperCase()+cat.slice(1));
+    if(!el)return;
+    el.innerHTML=STAPLES[cat].map((item,i)=>{
+      const key=`staple_${cat}_${i}`,isChecked=(storage['staples']||{})[key];
+      return`<div class="grocery-item">
+        <div class="grocery-check${isChecked?' checked':''}" onclick="toggleStaple('${key}',this)">${isChecked?'✓':''}</div>
+        <span class="grocery-item-name${isChecked?' checked-text':''}">${item}</span>
+      </div>`;
+    }).join('');
+  });
 }
-function toggleGrocery(key,el){const d=dayData(currentDay);if(!d.groceryChecked)d.groceryChecked={};d.groceryChecked[key]=!d.groceryChecked[key];save();el.className='grocery-check'+(d.groceryChecked[key]?' checked':'');el.innerHTML=d.groceryChecked[key]?'&#x2713;':'';const n=el.nextElementSibling;d.groceryChecked[key]?n.classList.add('checked-text'):n.classList.remove('checked-text');}
-function toggleStaple(key,el){if(!storage.staples)storage.staples={};storage.staples[key]=!storage.staples[key];save();el.className='grocery-check'+(storage.staples[key]?' checked':'');el.innerHTML=storage.staples[key]?'&#x2713;':'';const n=el.nextElementSibling;storage.staples[key]?n.classList.add('checked-text'):n.classList.remove('checked-text');}
+function toggleGrocery(key,el){
+  const d=dayData(currentDay);
+  if(!d.groceryChecked)d.groceryChecked={};
+  d.groceryChecked[key]=!d.groceryChecked[key];
+  save();
+  el.className='grocery-check'+(d.groceryChecked[key]?' checked':'');
+  el.innerHTML=d.groceryChecked[key]?'✓':'';
+  const n=el.nextElementSibling;
+  d.groceryChecked[key]?n.classList.add('checked-text'):n.classList.remove('checked-text');
+}
+function toggleStaple(key,el){
+  if(!storage.staples)storage.staples={};
+  storage.staples[key]=!storage.staples[key];
+  save();
+  el.className='grocery-check'+(storage.staples[key]?' checked':'');
+  el.innerHTML=storage.staples[key]?'✓':'';
+  const n=el.nextElementSibling;
+  storage.staples[key]?n.classList.add('checked-text'):n.classList.remove('checked-text');
+}
 
+// ====================== TRACKER ======================
 function renderCalGrid(){
-  const container=document.getElementById('calGrid');container.innerHTML='';
-  ['M','T','W','T','F','S','S'].forEach(d=>{const h=document.createElement('div');h.className='cal-head';h.textContent=d;container.appendChild(h);});
-  for(let i=1;i<=31;i++){const d=dayData(i),total=SLOTS.filter(s=>MEAL_PLAN[i-1][s]?.length).length,done=SLOTS.filter(s=>d.completed[s]).length,pct=total?done/total:0,btn=document.createElement('button');btn.className='cal-day';btn.style.cssText=`background:${pct>0.8?'var(--green)':pct>0.4?'var(--gold)':i===currentDay?'var(--accent2)':'var(--surface2)'};color:${pct>0||i===currentDay?'white':'var(--text3)'};outline:${i===currentDay?'2px solid var(--accent2)':'none'};outline-offset:2px;`;btn.textContent=i;btn.onclick=()=>showTrackerDay(i);container.appendChild(btn);}
+  const container=document.getElementById('calGrid');
+  container.innerHTML='';
+  ['M','T','W','T','F','S','S'].forEach(d=>{
+    const h=document.createElement('div');h.className='cal-head';h.textContent=d;container.appendChild(h);
+  });
+  for(let i=1;i<=31;i++){
+    const d=dayData(i);
+    const total=SLOTS.filter(s=>MEAL_PLAN[i-1][s]?.length).length;
+    const done=SLOTS.filter(s=>d.completed[s]).length;
+    const pct=total?done/total:0;
+    const btn=document.createElement('button');
+    btn.className='cal-day';
+    btn.style.cssText=`background:${pct>0.8?'var(--green)':pct>0.4?'var(--gold)':i===currentDay?'var(--accent2)':'var(--surface2)'};color:${pct>0||i===currentDay?'white':'var(--text3)'};outline:${i===currentDay?'2px solid var(--accent2)':'none'};outline-offset:2px;`;
+    btn.textContent=i;
+    btn.onclick=()=>showTrackerDay(i);
+    container.appendChild(btn);
+  }
 }
 function showTrackerDay(day){
   const plan=MEAL_PLAN[day-1],d=dayData(day),detail=document.getElementById('trackerDetail');
-  document.getElementById('trackerDetailTitle').textContent=`Day ${day} \u2014 ${plan.dayName}`;
-  const rows=SLOTS.filter(s=>plan[s]?.length).map(slot=>{const done=d.completed[slot],dismissed=d.dismissed[slot],meta=SLOT_META[slot];return`<div class="summary-row"><span class="summary-label">${meta.icon} ${meta.label}</span><span class="summary-val" style="color:${done?'var(--green)':dismissed?'var(--red)':'var(--text3)'};font-size:0.78rem">${done?'✓ Done':dismissed?'✕ Dismissed':'○ Pending'}</span></div>`;}).join('');
+  document.getElementById('trackerDetailTitle').textContent=`Day ${day} — ${plan.dayName}`;
+  const rows=SLOTS.filter(s=>plan[s]?.length).map(slot=>{
+    const done=d.completed[slot],dismissed=d.dismissed[slot],meta=SLOT_META[slot];
+    return`<div class="summary-row">
+      <span class="summary-label">${meta.icon} ${meta.label}</span>
+      <span class="summary-val" style="color:${done?'var(--green)':dismissed?'var(--red)':'var(--text3)'};font-size:0.78rem">${done?'✓ Done':dismissed?'✕ Dismissed':'○ Pending'}</span>
+    </div>`;
+  }).join('');
   const foods=d.foods||[],totCal=foods.reduce((a,f)=>a+f.cal,0);
-  document.getElementById('trackerDetailContent').innerHTML=rows+`<div class="summary-row"><span class="summary-label">\uD83D\uDCA7 Water</span><span class="summary-val">${d.water||0}/10 glasses</span></div><div class="summary-row"><span class="summary-label">\uD83C\uDF71 Calories logged</span><span class="summary-val">${totCal?Math.round(totCal)+' kcal':'\u2014'}</span></div>`;
-  detail.style.display='block';detail.scrollIntoView({behavior:'smooth',block:'nearest'});
+  document.getElementById('trackerDetailContent').innerHTML=rows+
+    `<div class="summary-row"><span class="summary-label">💧 Water</span><span class="summary-val">${d.water||0}/10 glasses</span></div>`+
+    `<div class="summary-row"><span class="summary-label">🍱 Calories logged</span><span class="summary-val">${totCal?Math.round(totCal)+' kcal':'—'}</span></div>`;
+  detail.style.display='block';
+  detail.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 function renderMonthlyStats(){
   let totalMeals=0,doneMeals=0,daysLogged=0,totalWater=0,totalCal=0;
-  for(let i=1;i<=31;i++){const d=dayData(i);SLOTS.forEach(s=>{if(MEAL_PLAN[i-1][s]?.length){totalMeals++;if(d.completed[s])doneMeals++;}});if((d.foods||[]).length)daysLogged++;totalWater+=d.water||0;totalCal+=(d.foods||[]).reduce((a,f)=>a+f.cal,0);}
+  for(let i=1;i<=31;i++){
+    const d=dayData(i);
+    SLOTS.forEach(s=>{if(MEAL_PLAN[i-1][s]?.length){totalMeals++;if(d.completed[s])doneMeals++;}});
+    if((d.foods||[]).length)daysLogged++;
+    totalWater+=d.water||0;
+    totalCal+=(d.foods||[]).reduce((a,f)=>a+f.cal,0);
+  }
   const pct=totalMeals?Math.round(doneMeals/totalMeals*100):0;
-  document.getElementById('monthlyStats').innerHTML=`<div class="summary-row"><span class="summary-label">Meals completed</span><span class="summary-val">${doneMeals}/${totalMeals} (${pct}%)</span></div><div class="summary-row"><span class="summary-label">Days with food log</span><span class="summary-val">${daysLogged}/31</span></div><div class="summary-row"><span class="summary-label">Total water</span><span class="summary-val">${totalWater} glasses</span></div><div class="summary-row"><span class="summary-label">Avg daily water</span><span class="summary-val">${(totalWater/31).toFixed(1)} glasses</span></div><div class="summary-row"><span class="summary-label">Total calories logged</span><span class="summary-val">${Math.round(totalCal)} kcal</span></div>`;
+  document.getElementById('monthlyStats').innerHTML=`
+    <div class="summary-row"><span class="summary-label">Meals completed</span><span class="summary-val">${doneMeals}/${totalMeals} (${pct}%)</span></div>
+    <div class="summary-row"><span class="summary-label">Days with food log</span><span class="summary-val">${daysLogged}/31</span></div>
+    <div class="summary-row"><span class="summary-label">Total water</span><span class="summary-val">${totalWater} glasses</span></div>
+    <div class="summary-row"><span class="summary-label">Avg daily water</span><span class="summary-val">${(totalWater/31).toFixed(1)} glasses</span></div>
+    <div class="summary-row"><span class="summary-label">Total calories logged</span><span class="summary-val">${Math.round(totalCal)} kcal</span></div>`;
 }
 
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
+// ====================== UTILS ======================
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2400);
+}
+function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 </script>
 </body>
 </html>
